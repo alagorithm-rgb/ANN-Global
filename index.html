@@ -1,36 +1,1124 @@
-make me a site that hoested in github and i want it to be provetioanl and modern and a very news website inspired. <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title }}</title>
-    <style>
-        :root { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --accent: #38bdf8; --border: #334155; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; margin: 0; line-height: 1.6; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
-        header { border-bottom: 1px solid var(--border); padding-bottom: 30px; margin-bottom: 50px; text-align: left; }
-        .brand { font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; color: var(--accent); text-transform: uppercase; }
-        nav { margin-top: 15px; font-size: 0.9rem; font-weight: 600; }
-        nav a { color: var(--text); text-decoration: none; margin-right: 25px; opacity: 0.7; }
-        nav a:hover { opacity: 1; color: var(--accent); }
-        h2 { font-size: 1.5rem; margin-top: 60px; color: var(--accent); display: flex; align-items: center; }
-        h2::after { content: ''; flex: 1; height: 1px; background: var(--border); margin-left: 20px; }
-        table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        th { background: #111827; padding: 15px 20px; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
-        td { padding: 20px; border-top: 1px solid var(--border); vertical-align: top; }
-        .headline { font-weight: 700; font-size: 1.1rem; display: block; margin-bottom: 8px; color: white; }
-        .source-btn { font-size: 0.8rem; font-weight: 700; color: var(--accent); text-decoration: none; border: 1px solid var(--accent); padding: 4px 10px; border-radius: 4px; }
-        .source-btn:hover { background: var(--accent); color: var(--bg); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANN Intelligence Feed — Global Strategic Monitoring</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & TOKENS ────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #0a0a0a;
+      --ink2:      #1c1c1c;
+      --paper:     #f5f0e8;
+      --paper2:    #ede8dc;
+      --paper3:    #e4ddd0;
+      --gold:      #b8860b;
+      --gold2:     #d4a017;
+      --red:       #c0392b;
+      --muted:     #6b6459;
+      --rule:      #c8bfaf;
+      --white:     #fdfaf5;
+      --serif:     'Playfair Display', Georgia, serif;
+      --body:      'Source Serif 4', Georgia, serif;
+      --mono:      'DM Mono', 'Courier New', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ─── UTILITY ────────────────────────────────────── */
+    .container { max-width: 1260px; margin: 0 auto; padding: 0 28px; }
+    .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+
+    .tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 2px 7px;
+      border-radius: 2px;
+    }
+    .tag.red  { color: var(--red); border-color: var(--red); }
+    .tag.dark { background: var(--ink); color: var(--gold); border-color: var(--ink); }
+
+    /* ─── TOP TICKER ─────────────────────────────────── */
+    .ticker-wrap {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: .06em;
+      padding: 7px 0;
+      overflow: hidden;
+      border-bottom: 2px solid var(--gold);
+    }
+    .ticker-inner { display: flex; align-items: center; gap: 0; }
+    .ticker-label {
+      flex-shrink: 0;
+      background: var(--gold);
+      color: var(--ink);
+      font-weight: 500;
+      padding: 0 16px;
+      margin-right: 20px;
+      height: 100%;
+      display: flex; align-items: center;
+      white-space: nowrap;
+    }
+    .ticker-track {
+      display: flex;
+      gap: 0;
+      animation: ticker 40s linear infinite;
+      white-space: nowrap;
+    }
+    .ticker-track span { padding-right: 60px; opacity: .85; }
+    .ticker-track span::before { content: '◆ '; color: var(--gold); }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── MASTHEAD ───────────────────────────────────── */
+    .masthead {
+      background: var(--white);
+      border-bottom: 1px solid var(--rule);
+      padding: 22px 0 0;
+    }
+    .masthead-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding-bottom: 18px;
+      border-bottom: 3px double var(--ink);
+    }
+    .masthead-date {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: .08em;
+    }
+    .masthead-title {
+      text-align: center;
+      flex: 1;
+      padding: 0 20px;
+    }
+    .masthead-title h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+      font-weight: 900;
+      letter-spacing: -.03em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .masthead-title h1 span { color: var(--gold); }
+    .masthead-tagline {
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      letter-spacing: .18em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+    .masthead-edition {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: .08em;
+      text-align: right;
+    }
+
+    /* ─── PRIMARY NAV ────────────────────────────────── */
+    .primary-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 0;
+      overflow-x: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .primary-nav::-webkit-scrollbar { display: none; }
+    .primary-nav a {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink);
+      padding: 11px 20px;
+      white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      transition: border-color .2s, color .2s;
+    }
+    .primary-nav a:hover,
+    .primary-nav a.active { border-bottom-color: var(--gold); color: var(--gold); }
+    .primary-nav .sep { color: var(--rule); font-size: 1rem; }
+
+    /* ─── LAYOUT GRID ────────────────────────────────── */
+    .page-body { padding: 40px 0 60px; }
+
+    /* Left + Center + Right */
+    .front-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr 260px;
+      gap: 0;
+      border-top: 1px solid var(--rule);
+    }
+
+    .col-left, .col-right {
+      padding: 28px 22px;
+    }
+    .col-left  { border-right: 1px solid var(--rule); }
+    .col-right { border-left: 1px solid var(--rule); }
+
+    .col-center {
+      padding: 28px 32px;
+    }
+
+    /* ─── SECTION LABEL ──────────────────────────────── */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+    }
+    .section-label strong { color: var(--gold); }
+
+    /* ─── HERO STORY ─────────────────────────────────── */
+    .hero-story { margin-bottom: 32px; }
+
+    .hero-story .kicker {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .hero-story h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      font-weight: 900;
+      line-height: 1.12;
+      letter-spacing: -.02em;
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+    .hero-story .deck {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--ink2);
+      border-left: 3px solid var(--gold);
+      padding-left: 14px;
+      margin-bottom: 14px;
+      font-style: italic;
+    }
+    .hero-story .byline {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: var(--muted);
+      letter-spacing: .06em;
+    }
+    .hero-story .byline span { color: var(--gold); }
+
+    .hero-image {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      border: 1px solid var(--rule);
+      margin-bottom: 18px;
+      background: var(--paper3);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-image-placeholder {
+      width: 100%;
+      height: 240px;
+      background: linear-gradient(135deg, var(--paper3) 0%, var(--paper2) 100%);
+      border: 1px solid var(--rule);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-image-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 6px,
+        rgba(0,0,0,.03) 6px,
+        rgba(0,0,0,.03) 12px
+      );
+    }
+    .hero-image-placeholder .img-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+      z-index: 1;
+    }
+
+    /* column rule between hero stories */
+    .hero-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .hero-pair > *:first-child { border-right: 1px solid var(--rule); padding-right: 24px; }
+    .hero-pair > *:last-child  { padding-left: 24px; }
+
+    /* ─── BRIEF ITEMS ────────────────────────────────── */
+    .brief-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .brief-item:last-child { border-bottom: none; }
+    .brief-item h4 {
+      font-family: var(--serif);
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      color: var(--ink);
+    }
+    .brief-item p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.45;
+      font-weight: 300;
+    }
+    .brief-item time {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--gold);
+      letter-spacing: .08em;
+      display: block;
+      margin-top: 5px;
+    }
+
+    /* ─── SIDE ITEMS ─────────────────────────────────── */
+    .side-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .side-item:last-child { border-bottom: none; }
+    .side-item .side-tag { margin-bottom: 6px; }
+    .side-item h4 {
+      font-family: var(--serif);
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .side-item p {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ─── OPINION QUOTE ──────────────────────────────── */
+    .opinion-block {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 22px 20px;
+      margin: 22px 0;
+      position: relative;
+    }
+    .opinion-block::before {
+      content: '\201C';
+      font-family: var(--serif);
+      font-size: 5rem;
+      color: var(--gold);
+      position: absolute;
+      top: -18px;
+      left: 14px;
+      line-height: 1;
+    }
+    .opinion-block blockquote {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-style: italic;
+      line-height: 1.5;
+      padding-top: 20px;
+    }
+    .opinion-block cite {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: .1em;
+      color: var(--gold);
+      margin-top: 10px;
+      font-style: normal;
+    }
+
+    /* ─── DATA TABLE ─────────────────────────────────── */
+    .data-table-wrap {
+      overflow-x: auto;
+      margin-bottom: 40px;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .data-table thead tr {
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .data-table th {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .data-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--rule);
+      vertical-align: top;
+    }
+    .data-table tbody tr:nth-child(even) td { background: var(--paper2); }
+    .data-table tbody tr:hover td { background: var(--paper3); }
+    .data-table .story-title { font-weight: 600; color: var(--ink); }
+    .data-table .story-source {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--muted);
+    }
+    .data-table .story-link {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 2px 8px;
+      white-space: nowrap;
+      transition: background .15s, color .15s;
+    }
+    .data-table .story-link:hover {
+      background: var(--gold);
+      color: var(--white);
+    }
+
+    /* ─── FULL-WIDTH SECTIONS ────────────────────────── */
+    .full-section {
+      border-top: 3px double var(--ink);
+      padding: 36px 0;
+    }
+    .full-section + .full-section { border-top: 1px solid var(--rule); }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .section-header h2 {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: -.02em;
+      color: var(--ink);
+    }
+    .section-header .section-rule {
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+    .section-header .section-count {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+    }
+
+    /* card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+    .card {
+      background: var(--white);
+      padding: 20px;
+      transition: background .15s;
+    }
+    .card:hover { background: var(--paper2); }
+    .card .card-tag { margin-bottom: 8px; }
+    .card h3 {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+    .card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.5;
+      font-weight: 300;
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .card-meta time {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: .07em;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 40px 0 24px;
+      border-top: 3px solid var(--gold);
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid #333;
+    }
+    .footer-brand h2 {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: -.02em;
+      margin-bottom: 8px;
+    }
+    .footer-brand p {
+      font-size: 0.8rem;
+      color: #888;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+    .footer-col h4 {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .footer-col a {
+      display: block;
+      font-size: 0.82rem;
+      color: #aaa;
+      margin-bottom: 8px;
+      transition: color .15s;
+    }
+    .footer-col a:hover { color: var(--paper); }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 20px;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: #555;
+      letter-spacing: .08em;
+    }
+    .footer-bottom span { color: var(--gold); }
+
+    /* ─── BREAKING BANNER ────────────────────────────── */
+    .breaking-banner {
+      background: var(--red);
+      color: white;
+      padding: 9px 0;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: .1em;
+      text-align: center;
+      animation: pulse-bg 3s ease-in-out infinite;
+    }
+    @keyframes pulse-bg {
+      0%,100% { background: var(--red); }
+      50%      { background: #a93226; }
+    }
+    .breaking-banner strong { text-transform: uppercase; margin-right: 12px; }
+
+    /* ─── DIVIDER ─────────────────────────────────────── */
+    .ornament-divider {
+      text-align: center;
+      color: var(--rule);
+      font-size: 1.1rem;
+      letter-spacing: .5em;
+      margin: 0 0 28px;
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 900px) {
+      .front-grid {
+        grid-template-columns: 1fr;
+      }
+      .col-left, .col-right {
+        border: none;
+        border-top: 1px solid var(--rule);
+        padding: 20px 0;
+      }
+      .col-center { padding: 20px 0; }
+      .hero-pair { grid-template-columns: 1fr; gap: 24px; }
+      .hero-pair > *:first-child { border-right: none; padding-right: 0; border-bottom: 1px solid var(--rule); padding-bottom: 24px; }
+      .hero-pair > *:last-child  { padding-left: 0; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .masthead-top { flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .container { padding: 0 16px; }
+      .footer-top { grid-template-columns: 1fr; gap: 24px; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+      .card-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
+
+  <!-- ─── BREAKING BANNER ─── -->
+  <div class="breaking-banner">
+    <strong>Breaking</strong> G7 Finance Ministers convene emergency session amid global bond market turbulence — Markets open lower across Asia
+  </div>
+
+  <!-- ─── TICKER ─── -->
+  <div class="ticker-wrap">
     <div class="container">
-        <header>
-            <div class="brand">ANN Intelligence Feed</div>
-            <p style="opacity:0.6; margin: 5px 0 0 0;">Global Strategic Monitoring | Digital News Sovereignty</p>
-            <nav><a href="#tech">Technology</a> <a href="#tunisia">Tunisia</a> <a href="#world">World</a></nav>
-        </header>
-        <main>{{ content }}</main>
+      <div class="ticker-inner">
+        <div class="ticker-label">LIVE FEED</div>
+        <div class="ticker-track" id="ticker">
+          <span>Tunisia GDP growth revised to 1.8% for Q1 2026</span>
+          <span>OpenAI announces GPT-5 multimodal capabilities</span>
+          <span>EU Digital Markets Act enforcement actions against three major platforms</span>
+          <span>MENA tech investment up 34% year-over-year</span>
+          <span>Global AI governance summit set for Geneva — June 2026</span>
+          <span>Tunisian fintech sector secures record $220M in foreign investment</span>
+          <span>Semiconductor supply chain realignment accelerates across Southeast Asia</span>
+          <span>Tunisia GDP growth revised to 1.8% for Q1 2026</span>
+          <span>OpenAI announces GPT-5 multimodal capabilities</span>
+          <span>EU Digital Markets Act enforcement actions against three major platforms</span>
+          <span>MENA tech investment up 34% year-over-year</span>
+          <span>Global AI governance summit set for Geneva — June 2026</span>
+          <span>Tunisian fintech sector secures record $220M in foreign investment</span>
+          <span>Semiconductor supply chain realignment accelerates across Southeast Asia</span>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- ─── MASTHEAD ─── -->
+  <div class="masthead">
+    <div class="container">
+      <div class="masthead-top">
+        <div class="masthead-date" id="today-date">WEDNESDAY · APRIL 8, 2026</div>
+        <div class="masthead-title">
+          <h1>ANN <span>Intelligence</span> Feed</h1>
+          <div class="masthead-tagline">Global Strategic Monitoring &nbsp;·&nbsp; Digital News Sovereignty</div>
+        </div>
+        <div class="masthead-edition">EST. 2024<br>VOL. II · NO. 98</div>
+      </div>
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a href="#front" class="active">Front Page</a>
+        <span class="sep" aria-hidden="true">|</span>
+        <a href="#technology">Technology</a>
+        <span class="sep" aria-hidden="true">|</span>
+        <a href="#tunisia">Tunisia</a>
+        <span class="sep" aria-hidden="true">|</span>
+        <a href="#world">World</a>
+        <span class="sep" aria-hidden="true">|</span>
+        <a href="#economy">Economy</a>
+        <span class="sep" aria-hidden="true">|</span>
+        <a href="#analysis">Analysis</a>
+        <span class="sep" aria-hidden="true">|</span>
+        <a href="#data">Data Desk</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ─── MAIN ─── -->
+  <main id="front">
+    <div class="page-body">
+      <div class="container">
+
+        <!-- ── THREE-COLUMN FRONT PAGE ── -->
+        <div class="front-grid">
+
+          <!-- LEFT COLUMN -->
+          <aside class="col-left">
+            <div class="section-label"><strong>Latest</strong> Briefs</div>
+
+            <div class="brief-item">
+              <div class="tag red">Tunisia</div>
+              <h4>Central Bank Holds Rate at 8%</h4>
+              <p>The Banque Centrale de Tunisie maintained its benchmark rate, citing persistent inflationary pressures from energy imports.</p>
+              <time>08 APR 2026 · 09:14</time>
+            </div>
+
+            <div class="brief-item">
+              <div class="tag">AI</div>
+              <h4>Mistral Releases 72B Parameter Open Model</h4>
+              <p>The Paris-based lab published weights under an Apache 2.0 license, challenging proprietary frontier models.</p>
+              <time>08 APR 2026 · 08:41</time>
+            </div>
+
+            <div class="brief-item">
+              <div class="tag">Geopolitics</div>
+              <h4>Libya Ceasefire Talks Resume in Tunis</h4>
+              <p>UN-backed negotiations between rival factions resumed at the Tunis Forum, with renewed international pressure for a durable deal.</p>
+              <time>07 APR 2026 · 22:05</time>
+            </div>
+
+            <div class="brief-item">
+              <div class="tag">Economy</div>
+              <h4>IMF Projects MENA Growth at 3.1%</h4>
+              <p>Spring 2026 World Economic Outlook raised regional projections on the back of oil revenues and fiscal reforms.</p>
+              <time>07 APR 2026 · 17:30</time>
+            </div>
+
+            <div class="brief-item">
+              <div class="tag">Cyber</div>
+              <h4>European Critical Infrastructure Hit by DDoS Campaign</h4>
+              <p>Energy and transport operators across three EU member states reported coordinated disruptions attributed to state-linked actors.</p>
+              <time>07 APR 2026 · 14:00</time>
+            </div>
+
+            <div class="opinion-block">
+              <blockquote>
+                Digital sovereignty is not a luxury for emerging economies — it is the foundation of strategic autonomy in the 21st century.
+              </blockquote>
+              <cite>— ANN Editorial Board, April 2026</cite>
+            </div>
+          </aside>
+
+          <!-- CENTER COLUMN -->
+          <section class="col-center">
+            <div class="section-label"><strong>Top</strong> Stories</div>
+
+            <!-- HERO 1 -->
+            <article class="hero-story" id="hero-lead">
+              <div class="kicker">🔴 Analysis · Artificial Intelligence</div>
+              <div class="hero-image-placeholder"><span class="img-label">PHOTO / ILLUSTRATION</span></div>
+              <h2>The Great Rebalancing: How Nations Are Legislating the AI Stack</h2>
+              <p class="deck">
+                From Brussels to Beijing, governments are drafting framework laws that will determine who controls the compute, the data, and the inference layer of global artificial intelligence.
+              </p>
+              <p style="font-size:0.88rem; color:var(--ink2); line-height:1.65; margin-bottom:14px;">
+                The window to shape the regulatory architecture of artificial intelligence is narrowing rapidly. In Washington, the AI Accountability Act has cleared committee. In Brussels, delegated acts under the EU AI Act are being finalised. China's State Council published its third algorithmic governance circular of the year. And in Tunis, a working group inside the Ministry of Communication Technologies is drafting what may become the MENA region's first comprehensive AI liability regime.
+              </p>
+              <p style="font-size:0.88rem; color:var(--ink2); line-height:1.65; margin-bottom:14px;">
+                What is striking is not the legislative activity itself, but its convergence: across jurisdictions with radically different political systems, the same three concerns animate policymakers — compute concentration, data provenance, and decision auditability.
+              </p>
+              <div class="byline">By <span>ANN Intelligence Desk</span> &nbsp;·&nbsp; April 8, 2026 &nbsp;·&nbsp; 12 min read</div>
+            </article>
+
+            <div class="ornament-divider">— ✦ —</div>
+
+            <!-- HERO PAIR -->
+            <div class="hero-pair">
+              <article class="hero-story">
+                <div class="kicker">Economy</div>
+                <h2 style="font-size:1.25rem;">Tunisia's Tech Corridor Bets on African Markets</h2>
+                <p class="deck">Startup founders and investors are looking south, not north, as the EU market tightens.</p>
+                <p style="font-size:0.82rem; color:var(--ink2); line-height:1.6; margin-bottom:12px;">
+                  A cluster of Tunis-based software companies has pivoted toward Francophone Africa, finding greenfield demand in fintech, agritech, and logistics optimisation. Three firms closed Series A rounds this month totalling $47M.
+                </p>
+                <div class="byline">By <span>Sarra Mansouri</span> &nbsp;·&nbsp; April 7</div>
+              </article>
+
+              <article class="hero-story">
+                <div class="kicker">Cybersecurity</div>
+                <h2 style="font-size:1.25rem;">Zero-Day Brokers and the New Surveillance Economy</h2>
+                <p class="deck">A leaked tender document reveals the scale of state demand for commercial spyware.</p>
+                <p style="font-size:0.82rem; color:var(--ink2); line-height:1.6; margin-bottom:12px;">
+                  The $400M contract document, authenticated by three independent researchers, describes capabilities far beyond publicly acknowledged programmes — including AI-assisted behavioural prediction of targets.
+                </p>
+                <div class="byline">By <span>Mehdi Trabelsi</span> &nbsp;·&nbsp; April 7</div>
+              </article>
+            </div>
+          </section>
+
+          <!-- RIGHT COLUMN -->
+          <aside class="col-right">
+            <div class="section-label"><strong>Monitor</strong> · Signals</div>
+
+            <div class="side-item">
+              <div class="side-tag"><span class="tag dark">Exclusive</span></div>
+              <h4>MENA Data Centre Capacity to Triple by 2028</h4>
+              <p>New hyperscaler commitments in Saudi Arabia, UAE, and Morocco are reshaping the region's cloud sovereignty debate.</p>
+            </div>
+
+            <div class="side-item">
+              <div class="side-tag"><span class="tag">World</span></div>
+              <h4>India-EU Digital Partnership Signed in Brussels</h4>
+              <p>The framework covers semiconductor cooperation, AI research exchange, and mutual recognition of data adequacy decisions.</p>
+            </div>
+
+            <div class="side-item">
+              <div class="side-tag"><span class="tag red">Alert</span></div>
+              <h4>Global DNS Infrastructure Under Strain</h4>
+              <p>Security researchers report a sustained reconnaissance campaign against root server operators not seen since 2016.</p>
+            </div>
+
+            <div class="side-item">
+              <div class="side-tag"><span class="tag">Tunisia</span></div>
+              <h4>Carthage University Launches AI Research Hub</h4>
+              <p>A $12M joint initiative with German universities aims to produce 300 PhD-level AI researchers by 2030.</p>
+            </div>
+
+            <div class="side-item">
+              <div class="side-tag"><span class="tag">Economy</span></div>
+              <h4>Dinar Stabilises After Six Months of Volatility</h4>
+              <p>Currency traders cite CBT intervention and improved remittance flows from Europe as contributing factors.</p>
+            </div>
+
+            <div style="margin-top:22px; padding:16px; background:var(--paper3); border-left:3px solid var(--gold);">
+              <div class="section-label" style="border:none; padding:0; margin-bottom:10px;"><strong>This Week</strong> in Numbers</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div style="text-align:center;">
+                  <div style="font-family:var(--serif); font-size:1.6rem; font-weight:900; color:var(--gold);">+34%</div>
+                  <div style="font-family:var(--mono); font-size:0.58rem; color:var(--muted); letter-spacing:.08em;">MENA TECH INVESTMENT YoY</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-family:var(--serif); font-size:1.6rem; font-weight:900; color:var(--red);">$220M</div>
+                  <div style="font-family:var(--mono); font-size:0.58rem; color:var(--muted); letter-spacing:.08em;">TN FINTECH FOREIGN CAPITAL</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-family:var(--serif); font-size:1.6rem; font-weight:900; color:var(--ink);">127</div>
+                  <div style="font-family:var(--mono); font-size:0.58rem; color:var(--muted); letter-spacing:.08em;">AI BILLS IN GLOBAL PIPELINE</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-family:var(--serif); font-size:1.6rem; font-weight:900; color:var(--gold);">3.1%</div>
+                  <div style="font-family:var(--mono); font-size:0.58rem; color:var(--muted); letter-spacing:.08em;">MENA GDP GROWTH FORECAST</div>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+        </div><!-- /front-grid -->
+
+        <!-- ── TECHNOLOGY SECTION ── -->
+        <section class="full-section" id="technology">
+          <div class="section-header">
+            <h2>Technology</h2>
+            <div class="section-rule"></div>
+            <div class="section-count">6 Stories</div>
+          </div>
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-tag"><span class="tag">AI / ML</span></div>
+              <h3>Foundation Model Benchmarks Are Breaking Down</h3>
+              <p>Researchers argue that Elo-style rankings fail to capture real-world capability differentials, calling for task-specific evaluation regimes.</p>
+              <div class="card-meta"><span class="tag dark">Analysis</span><time>Apr 8</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Semiconductors</span></div>
+              <h3>TSMC Arizona Fab Hits Yield Milestone in N3E</h3>
+              <p>The Phoenix facility achieved production-grade yields on 3nm process technology, a critical benchmark for US-domestic advanced chip supply.</p>
+              <div class="card-meta"><time>Apr 8</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Cybersecurity</span></div>
+              <h3>Post-Quantum Cryptography Migration: Where Governments Stand</h3>
+              <p>A global audit finds only 12% of critical infrastructure operators have begun NIST PQC standard implementation.</p>
+              <div class="card-meta"><span class="tag dark">Report</span><time>Apr 7</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Connectivity</span></div>
+              <h3>Starlink MENA Licences Stall Over Data Sovereignty Rules</h3>
+              <p>Several North African regulators are demanding local data storage and real-time traffic inspection access as conditions of approval.</p>
+              <div class="card-meta"><time>Apr 7</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Open Source</span></div>
+              <h3>Linux Foundation Launches Trusted AI Initiative</h3>
+              <p>The initiative will establish provenance standards for open-weight models, addressing growing concerns about supply-chain attacks on model artefacts.</p>
+              <div class="card-meta"><time>Apr 6</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Space Tech</span></div>
+              <h3>ESA Awards €800M Earth Observation Contract to Consortium</h3>
+              <p>The Copernicus Next Generation programme will deploy six optical and radar satellites, with open data access for member states.</p>
+              <div class="card-meta"><time>Apr 6</time></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── TUNISIA SECTION ── -->
+        <section class="full-section" id="tunisia">
+          <div class="section-header">
+            <h2>Tunisia</h2>
+            <div class="section-rule"></div>
+            <div class="section-count">5 Stories</div>
+          </div>
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-tag"><span class="tag">Economy</span></div>
+              <h3>Sfax Industrial Zone Targets European Nearshoring Demand</h3>
+              <p>The government unveiled incentive packages aimed at attracting European manufacturers seeking to reduce Asia-Pacific supply chain exposure.</p>
+              <div class="card-meta"><time>Apr 8</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Education</span></div>
+              <h3>National Digital Skills Programme Enrols 50,000 Youth</h3>
+              <p>Phase two of the programme, co-funded by the EU and the African Development Bank, focuses on cloud infrastructure and data engineering.</p>
+              <div class="card-meta"><span class="tag dark">Development</span><time>Apr 7</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Policy</span></div>
+              <h3>Tunisia Tables Draft AI Liability Bill at WIPO Session</h3>
+              <p>The proposal would hold deployers — not developers — liable for high-risk AI decisions, diverging from the EU approach.</p>
+              <div class="card-meta"><time>Apr 7</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Infrastructure</span></div>
+              <h3>Tunis–Sfax Fibre Corridor to Add 400Gbps Capacity</h3>
+              <p>Tunisie Telecom and two private operators announced a joint build that will double national backbone bandwidth by mid-2027.</p>
+              <div class="card-meta"><time>Apr 6</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Startups</span></div>
+              <h3>IntiLAB Cohort 7 Launches with Record 42 Deeptech Startups</h3>
+              <p>The Tunis accelerator, backed by Germany's GIZ, accepted its largest cohort to date, with a majority focused on AgriTech and HealthTech.</p>
+              <div class="card-meta"><time>Apr 5</time></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── WORLD SECTION ── -->
+        <section class="full-section" id="world">
+          <div class="section-header">
+            <h2>World</h2>
+            <div class="section-rule"></div>
+            <div class="section-count">6 Stories</div>
+          </div>
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-tag"><span class="tag red">Conflict</span></div>
+              <h3>Sudan Peace Process Falters After Khartoum Airstrikes</h3>
+              <p>AU-mediated ceasefire negotiations are at risk following fresh aerial bombardments of civilian infrastructure in Omdurman.</p>
+              <div class="card-meta"><time>Apr 8</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Diplomacy</span></div>
+              <h3>BRICS+ Expands Digital Currency Working Group Mandate</h3>
+              <p>Member states agreed to accelerate the technical framework for mBridge settlement integration, aiming for a 2027 pilot.</p>
+              <div class="card-meta"><time>Apr 7</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Climate</span></div>
+              <h3>Mediterranean Drought Enters Third Consecutive Year</h3>
+              <p>WMO confirms that precipitation deficits across North Africa and southern Europe are now statistically inconsistent with pre-industrial climate variability.</p>
+              <div class="card-meta"><span class="tag dark">Report</span><time>Apr 7</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Trade</span></div>
+              <h3>WTO Dispute Panel Rules Against US Semiconductor Subsidies</h3>
+              <p>The ruling, which Washington is expected to appeal, challenged provisions of the CHIPS Act as incompatible with subsidy disciplines.</p>
+              <div class="card-meta"><time>Apr 6</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Africa</span></div>
+              <h3>AfCFTA Digital Trade Protocol Reaches Quorum for Entry into Force</h3>
+              <p>The 22nd ratification was deposited by Rwanda, triggering implementation of the continent's first binding e-commerce framework.</p>
+              <div class="card-meta"><time>Apr 6</time></div>
+            </div>
+            <div class="card">
+              <div class="card-tag"><span class="tag">Energy</span></div>
+              <h3>Hydrogen Trade Corridor Linking Morocco to Germany Secures Financing</h3>
+              <p>A €4.2B financing package was assembled by a European consortium for the first transmediterranean green hydrogen pipeline.</p>
+              <div class="card-meta"><time>Apr 5</time></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── DATA DESK ── -->
+        <section class="full-section" id="data">
+          <div class="section-header">
+            <h2>Data Desk</h2>
+            <div class="section-rule"></div>
+            <div class="section-count">Intelligence Feed</div>
+          </div>
+
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Story</th>
+                  <th>Category</th>
+                  <th>Region</th>
+                  <th>Date</th>
+                  <th>Source</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>01</td>
+                  <td><span class="story-title">EU AI Act Delegated Acts Published in Official Journal</span></td>
+                  <td><span class="tag">Policy</span></td>
+                  <td>Europe</td>
+                  <td>08 Apr</td>
+                  <td class="story-source">EUR-Lex</td>
+                  <td><a href="#" class="story-link">→ Read</a></td>
+                </tr>
+                <tr>
+                  <td>02</td>
+                  <td><span class="story-title">Tunisia Inflation Eases to 6.2% in March 2026</span></td>
+                  <td><span class="tag">Economy</span></td>
+                  <td>Tunisia</td>
+                  <td>07 Apr</td>
+                  <td class="story-source">INS Tunisia</td>
+                  <td><a href="#" class="story-link">→ Read</a></td>
+                </tr>
+                <tr>
+                  <td>03</td>
+                  <td><span class="story-title">Global Ransomware Attacks Up 41% in Q1 2026</span></td>
+                  <td><span class="tag red">Cyber</span></td>
+                  <td>Global</td>
+                  <td>07 Apr</td>
+                  <td class="story-source">Recorded Future</td>
+                  <td><a href="#" class="story-link">→ Read</a></td>
+                </tr>
+                <tr>
+                  <td>04</td>
+                  <td><span class="story-title">African Development Bank Raises $8.2B in Bond Market</span></td>
+                  <td><span class="tag">Finance</span></td>
+                  <td>Africa</td>
+                  <td>06 Apr</td>
+                  <td class="story-source">AfDB Press</td>
+                  <td><a href="#" class="story-link">→ Read</a></td>
+                </tr>
+                <tr>
+                  <td>05</td>
+                  <td><span class="story-title">NATO Cyber Centre Publishes Tallinn Manual 3.0</span></td>
+                  <td><span class="tag">Defence</span></td>
+                  <td>Europe</td>
+                  <td>05 Apr</td>
+                  <td class="story-source">CCDCOE</td>
+                  <td><a href="#" class="story-link">→ Read</a></td>
+                </tr>
+                <tr>
+                  <td>06</td>
+                  <td><span class="story-title">MENA Startup Ecosystem Report 2026 Released</span></td>
+                  <td><span class="tag">Startups</span></td>
+                  <td>MENA</td>
+                  <td>04 Apr</td>
+                  <td class="story-source">Magnitt</td>
+                  <td><a href="#" class="story-link">→ Read</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /container -->
+    </div><!-- /page-body -->
+  </main>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <h2>ANN Intelligence Feed</h2>
+          <p>Independent strategic monitoring covering technology, geopolitics, and economic affairs across the MENA region and the world. Published from Tunis.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Sections</h4>
+          <a href="#technology">Technology</a>
+          <a href="#tunisia">Tunisia</a>
+          <a href="#world">World</a>
+          <a href="#economy">Economy</a>
+          <a href="#data">Data Desk</a>
+        </div>
+        <div class="footer-col">
+          <h4>About</h4>
+          <a href="#">Editorial Charter</a>
+          <a href="#">Masthead</a>
+          <a href="#">Contact</a>
+          <a href="#">Privacy Policy</a>
+        </div>
+        <div class="footer-col">
+          <h4>Follow</h4>
+          <a href="#">Twitter / X</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">RSS Feed</a>
+          <a href="#">Newsletter</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 ANN Intelligence Feed</span>
+        <span>All editorial content is © ANN. Reproduction requires written permission.</span>
+        <span>Built for <span>GitHub Pages</span></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Live date
+    const d = new Date();
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const el = document.getElementById('today-date');
+    if (el) el.textContent = `${days[d.getDay()].toUpperCase()} · ${months[d.getMonth()].toUpperCase()} ${d.getDate()}, ${d.getFullYear()}`;
+
+    // Active nav on scroll
+    const sections = document.querySelectorAll('section[id], main[id]');
+    const navLinks = document.querySelectorAll('.primary-nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(a => {
+            a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { threshold: 0.35 });
+    sections.forEach(s => observer.observe(s));
+
+    // Pause ticker on hover
+    const track = document.querySelector('.ticker-track');
+    if (track) {
+      track.addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
+      track.addEventListener('mouseleave', () => track.style.animationPlayState = 'running');
+    }
+  </script>
 </body>
 </html>

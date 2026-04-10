@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ANN Feed — Global News Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,700&family=Inter:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #f4f1e8;      /* Paper Ivory */
+      --ink: #1c1917;     /* Ink Black */
+      --muted: #78716c;   /* Slate Grey */
+      --accent: #b09e76;  /* Newspaper Gold */
+      --red: #e63946;     /* Breaking News Red */
+      --border: #d6d3d1;  /* Light Stone Border */
+    }
+    body { 
+      background: var(--bg); 
+      color: var(--ink); 
+      font-family: 'Inter', sans-serif; 
+      margin: 0; 
+      line-height: 1.5; 
+    }
+    /* Breaking Bar */
+    .breaking { 
+      background: var(--red); 
+      color: white; 
+      font-size: 10px; 
+      font-weight: 700; 
+      text-transform: uppercase; 
+      padding: 8px 0; 
+      text-align: center; 
+      letter-spacing: 1px;
+    }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    header { text-align: center; border-bottom: 2px solid var(--ink); padding: 40px 0 10px; margin-bottom: 20px; }
+    header h1 { font-family: 'Fraunces', serif; font-size: 4rem; margin: 0; letter-spacing: -2px; }
+    .masthead-sub { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); }
+    
+    /* Grid Layout */
+    .grid { display: grid; grid-template-columns: 280px 1fr 300px; gap: 30px; margin-top: 20px; }
+    .col-side { border-right: 1px solid var(--border); padding-right: 20px; }
+    .col-right { border-left: 1px solid var(--border); padding-left: 20px; }
+    
+    h2, h3, h4 { font-family: 'Fraunces', serif; margin-top: 0; }
+    .tag { color: var(--red); font-size: 10px; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 5px; }
+    
+    /* Article Styles */
+    .main-article h2 { font-size: 2.5rem; line-height: 1.1; margin-bottom: 15px; }
+    .main-article p { font-size: 1.1rem; color: #444; }
+    .brief-item { padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid var(--border); }
+    .brief-item h5 { margin: 0; font-size: 1rem; }
+    .brief-item p { font-size: 0.85rem; color: var(--muted); margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <div class="breaking">Breaking: G7 Finance Ministers convene emergency session amid market turbulence</div>
+  <div class="wrap">
+    <header>
+      <h1>ANN Intelligence Feed</h1>
+      <div class="masthead-sub">Global Strategic Monitoring · Digital News Sovereignty</div>
+    </header>
+    <div class="grid">
+      <aside class="col-side" id="news-briefs">
+        <span class="tag">Tunisia</span>
+        <div class="brief-item">
+          <h5>Central Bank Holds Rate at 8%</h5>
+          <p>BCT maintained rates citing inflationary pressures and energy costs.</p>
+        </div>
+      </aside>
+      <main class="main-article">
+        <span class="tag">Artificial Intelligence</span>
+        <h2>The Great Rebalancing: How Nations Are Legislating the AI Stack</h2>
+        <p>From Brussels to Beijing, governments are drafting framework laws to determine who controls compute and data.</p>
+      </main>
+      <aside class="col-right">
+        <div class="brief-item">
+          <span class="tag">Exclusive</span>
+          <h5>MENA Data Center Capacity to Triple</h5>
+          <p>New investments are reshaping the region's cloud sovereignty.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</body>
+</html>

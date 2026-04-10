@@ -1,1124 +1,1211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ANN Intelligence Feed — Global Strategic Monitoring</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ANN Feed — Global News Intelligence</title>
+  <meta name="description" content="ANN Feed — AI-curated global news and human-prompted perspectives. Updated multiple times daily."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,600;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
   <style>
-    /* ─── RESET & TOKENS ────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  /* ══════════════════════════════════════
+     DESIGN TOKENS — Paper Editorial Theme
+  ══════════════════════════════════════ */
+  :root {
+    --paper:    #f5f0e8;
+    --paper2:   #ede8dc;
+    --paper3:   #e4ddd0;
+    --paper4:   #ddd5c5;
+    --ink:      #111111;
+    --ink2:     #222222;
+    --ink3:     #444444;
+    --muted:    #6b6459;
+    --rule:     #c8bfaf;
+    --rule2:    #b8ae9e;
+    --white:    #fdfaf5;
+    --gold:     #b8860b;
+    --gold2:    #d4a017;
+    --goldlt:   #f0c040;
+    --red:      #b91c1c;
+    --red2:     #dc2626;
+    --sky:      #1d6fa4;
+    --sky2:     #2980b9;
+    --persp:    #6b3d8a;   /* purple accent for Perspectives tab */
+    --persp2:   #8b5aaa;
+    --grn:      #1a7a4a;
 
-    :root {
-      --ink:       #0a0a0a;
-      --ink2:      #1c1c1c;
-      --paper:     #f5f0e8;
-      --paper2:    #ede8dc;
-      --paper3:    #e4ddd0;
-      --gold:      #b8860b;
-      --gold2:     #d4a017;
-      --red:       #c0392b;
-      --muted:     #6b6459;
-      --rule:      #c8bfaf;
-      --white:     #fdfaf5;
-      --serif:     'Playfair Display', Georgia, serif;
-      --body:      'Source Serif 4', Georgia, serif;
-      --mono:      'DM Mono', 'Courier New', monospace;
-    }
+    --serif:    'Playfair Display', Georgia, serif;
+    --body:     'Source Serif 4', Georgia, serif;
+    --mono:     'DM Mono', 'Courier New', monospace;
 
-    html { scroll-behavior: smooth; }
+    --r: 3px; --r2: 6px; --r3: 10px;
+  }
 
-    body {
-      background: var(--paper);
-      color: var(--ink);
-      font-family: var(--body);
-      font-size: 17px;
-      line-height: 1.65;
-    }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+  .wrap { max-width: 1260px; margin: 0 auto; padding: 0 24px; }
 
-    a { color: inherit; text-decoration: none; }
-    img { display: block; max-width: 100%; }
+  /* ── GRAIN TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.028'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9998; opacity: .6;
+  }
 
-    /* ─── UTILITY ────────────────────────────────────── */
-    .container { max-width: 1260px; margin: 0 auto; padding: 0 28px; }
-    .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+  /* ── BADGES ── */
+  .tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--mono); font-size: 9px; font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 2px; border: 1px solid currentColor;
+  }
+  .t-gold  { color: var(--gold);  border-color: rgba(184,134,11,.4);  background: rgba(184,134,11,.07); }
+  .t-red   { color: var(--red);   border-color: rgba(185,28,28,.35);  background: rgba(185,28,28,.06); }
+  .t-sky   { color: var(--sky);   border-color: rgba(29,111,164,.35); background: rgba(29,111,164,.06); }
+  .t-grn   { color: var(--grn);   border-color: rgba(26,122,74,.35);  background: rgba(26,122,74,.06); }
+  .t-dim   { color: var(--muted); border-color: var(--rule);          background: var(--paper2); }
+  .t-persp { color: var(--persp); border-color: rgba(107,61,138,.35); background: rgba(107,61,138,.07); }
+  .t-excl  { color: var(--white); border-color: var(--ink); background: var(--ink); }
 
-    .tag {
-      display: inline-block;
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      font-weight: 500;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--gold);
-      border: 1px solid var(--gold);
-      padding: 2px 7px;
-      border-radius: 2px;
-    }
-    .tag.red  { color: var(--red); border-color: var(--red); }
-    .tag.dark { background: var(--ink); color: var(--gold); border-color: var(--ink); }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red2); animation: blink 1.2s ease-in-out infinite; display: inline-block; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
 
-    /* ─── TOP TICKER ─────────────────────────────────── */
-    .ticker-wrap {
-      background: var(--ink);
-      color: var(--paper);
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: .06em;
-      padding: 7px 0;
-      overflow: hidden;
-      border-bottom: 2px solid var(--gold);
-    }
-    .ticker-inner { display: flex; align-items: center; gap: 0; }
-    .ticker-label {
-      flex-shrink: 0;
-      background: var(--gold);
-      color: var(--ink);
-      font-weight: 500;
-      padding: 0 16px;
-      margin-right: 20px;
-      height: 100%;
-      display: flex; align-items: center;
-      white-space: nowrap;
-    }
-    .ticker-track {
-      display: flex;
-      gap: 0;
-      animation: ticker 40s linear infinite;
-      white-space: nowrap;
-    }
-    .ticker-track span { padding-right: 60px; opacity: .85; }
-    .ticker-track span::before { content: '◆ '; color: var(--gold); }
-    @keyframes ticker {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
+  /* ── TICKER ── */
+  .ticker {
+    background: var(--ink); color: var(--paper);
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    letter-spacing: .07em; padding: 7px 0; overflow: hidden;
+    border-bottom: 2px solid var(--gold);
+  }
+  .tick-row { display: flex; align-items: center; }
+  .tick-lbl {
+    flex-shrink: 0; background: var(--gold); color: var(--ink);
+    padding: 0 16px; height: 22px; display: flex; align-items: center;
+    margin-right: 20px; font-size: 10px; letter-spacing: .18em; font-weight: 500;
+  }
+  .tick-track { display: flex; white-space: nowrap; animation: ticksc 55s linear infinite; }
+  .tick-track:hover { animation-play-state: paused; cursor: default; }
+  .tick-track span { padding-right: 64px; opacity: .8; }
+  .tick-track span::before { content: '◆  '; color: var(--gold); opacity: .7; }
+  @keyframes ticksc { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-    /* ─── MASTHEAD ───────────────────────────────────── */
-    .masthead {
-      background: var(--white);
-      border-bottom: 1px solid var(--rule);
-      padding: 22px 0 0;
-    }
-    .masthead-top {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      padding-bottom: 18px;
-      border-bottom: 3px double var(--ink);
-    }
-    .masthead-date {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      color: var(--muted);
-      letter-spacing: .08em;
-    }
-    .masthead-title {
-      text-align: center;
-      flex: 1;
-      padding: 0 20px;
-    }
-    .masthead-title h1 {
-      font-family: var(--serif);
-      font-size: clamp(2.4rem, 5.5vw, 4.2rem);
-      font-weight: 900;
-      letter-spacing: -.03em;
-      line-height: 1;
-      color: var(--ink);
-    }
-    .masthead-title h1 span { color: var(--gold); }
-    .masthead-tagline {
-      font-family: var(--mono);
-      font-size: 0.64rem;
-      letter-spacing: .18em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-top: 5px;
-    }
-    .masthead-edition {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      color: var(--muted);
-      letter-spacing: .08em;
-      text-align: right;
-    }
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: var(--white);
+    border-bottom: 3px double var(--ink);
+  }
+  .mast-inner {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    align-items: flex-end; padding: 22px 24px 18px;
+    max-width: 1260px; margin: 0 auto;
+    border-bottom: 1px solid var(--ink);
+  }
+  .mast-left { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .1em; }
+  .mast-left .date-line { font-size: 11px; color: var(--ink3); margin-bottom: 3px; }
 
-    /* ─── PRIMARY NAV ────────────────────────────────── */
-    .primary-nav {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      padding: 0;
-      overflow-x: auto;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .primary-nav::-webkit-scrollbar { display: none; }
-    .primary-nav a {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--ink);
-      padding: 11px 20px;
-      white-space: nowrap;
-      border-bottom: 3px solid transparent;
-      transition: border-color .2s, color .2s;
-    }
-    .primary-nav a:hover,
-    .primary-nav a.active { border-bottom-color: var(--gold); color: var(--gold); }
-    .primary-nav .sep { color: var(--rule); font-size: 1rem; }
+  .mast-center { text-align: center; padding: 0 20px; }
+  .site-name {
+    font-family: var(--serif); font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 900; letter-spacing: -.03em; line-height: 1;
+    color: var(--ink);
+  }
+  .site-name span { color: var(--gold); }
+  .site-tagline {
+    font-family: var(--mono); font-size: 9px; letter-spacing: .22em;
+    color: var(--muted); text-transform: uppercase; margin-top: 5px;
+  }
+  .mast-right {
+    font-family: var(--mono); font-size: 10px; color: var(--muted);
+    letter-spacing: .08em; text-align: right;
+  }
+  .mast-right .edition { font-size: 11px; color: var(--ink3); margin-bottom: 3px; }
 
-    /* ─── LAYOUT GRID ────────────────────────────────── */
-    .page-body { padding: 40px 0 60px; }
+  /* ── HEADER ACTIONS ── */
+  .hdr-actions { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 8px 24px; max-width: 1260px; margin: 0 auto; }
+  .hbtn { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; padding: 5px 14px; border-radius: var(--r); cursor: pointer; border: none; }
+  .hbtn-g { background: transparent; color: var(--muted); border: 1px solid var(--rule2) !important; }
+  .hbtn-s { background: var(--ink); color: var(--paper); }
+  .hbtn-g:hover { color: var(--ink); }
+  .hbtn-s:hover { background: var(--ink2); }
 
-    /* Left + Center + Right */
-    .front-grid {
-      display: grid;
-      grid-template-columns: 260px 1fr 260px;
-      gap: 0;
-      border-top: 1px solid var(--rule);
-    }
+  /* ── PRIMARY NAV ── */
+  .pnav { background: var(--white); border-bottom: 1px solid var(--rule); }
+  .pnav-row {
+    display: flex; align-items: center;
+    max-width: 1260px; margin: 0 auto; padding: 0 24px;
+    overflow-x: auto; scrollbar-width: none; gap: 0;
+  }
+  .pnav-row::-webkit-scrollbar { display: none; }
+  .pnav-row a {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink3);
+    padding: 11px 18px; white-space: nowrap;
+    border-bottom: 2px solid transparent; transition: color .2s, border-color .2s;
+  }
+  .pnav-row a:hover { color: var(--ink); }
+  .pnav-row a.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .pnav-sep { color: var(--rule2); padding: 0 2px; font-size: 1rem; }
 
-    .col-left, .col-right {
-      padding: 28px 22px;
-    }
-    .col-left  { border-right: 1px solid var(--rule); }
-    .col-right { border-left: 1px solid var(--rule); }
+  /* ── TAB BAR (News / Perspectives) ── */
+  .tab-bar {
+    background: var(--paper2);
+    border-bottom: 2px solid var(--ink);
+    position: sticky; top: 0; z-index: 200;
+  }
+  .tab-row {
+    display: flex; max-width: 1260px; margin: 0 auto; padding: 0 24px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .tab-row::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    font-family: var(--serif); font-size: 14px; font-weight: 700;
+    letter-spacing: -.01em; color: var(--muted);
+    padding: 13px 22px; white-space: nowrap; cursor: pointer;
+    background: none; border: none; border-bottom: 3px solid transparent;
+    position: relative; transition: color .2s;
+  }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .tab-btn.persp-tab.active { color: var(--persp); border-bottom-color: var(--persp); }
+  .tab-badge {
+    display: inline-flex; font-family: var(--mono); font-size: 8px;
+    font-weight: 500; letter-spacing: .1em; padding: 1px 5px;
+    border-radius: 2px; margin-left: 6px; position: relative; top: -1px;
+  }
+  .news-badge { background: rgba(185,28,28,.12); color: var(--red); }
+  .persp-badge { background: rgba(107,61,138,.12); color: var(--persp); }
 
-    .col-center {
-      padding: 28px 32px;
-    }
+  /* ── PANELS ── */
+  .panel { display: none; }
+  .panel.active { display: block; }
 
-    /* ─── SECTION LABEL ──────────────────────────────── */
-    .section-label {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      color: var(--muted);
-      border-bottom: 1px solid var(--rule);
-      padding-bottom: 6px;
-      margin-bottom: 18px;
-    }
-    .section-label strong { color: var(--gold); }
+  /* ── PAGE BODY ── */
+  .page-body { padding: 0 0 80px; }
 
-    /* ─── HERO STORY ─────────────────────────────────── */
-    .hero-story { margin-bottom: 32px; }
+  /* ── BREAKING BANNER ── */
+  .breaking {
+    background: linear-gradient(90deg, rgba(185,28,28,.1) 0%, transparent 100%);
+    border-left: 3px solid var(--red2); padding: 11px 18px;
+    display: flex; align-items: flex-start; gap: 16px;
+    margin: 22px 0; border-radius: 0 var(--r3) var(--r3) 0;
+  }
+  .brk-lbl {
+    font-family: var(--mono); font-size: 9px; font-weight: 500;
+    letter-spacing: .18em; color: var(--red); text-transform: uppercase;
+    flex-shrink: 0; display: flex; align-items: center; gap: 6px; padding-top: 2px;
+  }
+  .brk-msg { font-family: var(--body); font-size: 13.5px; color: var(--ink2); line-height: 1.45; }
+  .brk-msg strong { color: var(--ink); font-weight: 600; }
 
-    .hero-story .kicker {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--red);
-      margin-bottom: 8px;
-    }
-    .hero-story h2 {
-      font-family: var(--serif);
-      font-size: clamp(1.8rem, 3vw, 2.8rem);
-      font-weight: 900;
-      line-height: 1.12;
-      letter-spacing: -.02em;
-      margin-bottom: 12px;
-      color: var(--ink);
-    }
-    .hero-story .deck {
-      font-size: 1.05rem;
-      font-weight: 300;
-      color: var(--ink2);
-      border-left: 3px solid var(--gold);
-      padding-left: 14px;
-      margin-bottom: 14px;
-      font-style: italic;
-    }
-    .hero-story .byline {
-      font-family: var(--mono);
-      font-size: 0.63rem;
-      color: var(--muted);
-      letter-spacing: .06em;
-    }
-    .hero-story .byline span { color: var(--gold); }
+  /* ── AI STATUS ── */
+  .ai-status {
+    display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+    background: var(--paper2); border: 1px solid var(--rule);
+    border-radius: var(--r2); margin-bottom: 18px;
+    font-family: var(--mono); font-size: 10px; color: var(--muted);
+  }
+  .ai-pulse {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--grn);
+    flex-shrink: 0; box-shadow: 0 0 0 0 rgba(26,122,74,.4);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(26,122,74,.4)} 70%{box-shadow:0 0 0 7px rgba(26,122,74,0)} 100%{box-shadow:0 0 0 0 rgba(26,122,74,0)} }
+  .ai-status strong { color: var(--grn); font-weight: 500; }
+  .ai-upd { margin-left: auto; }
 
-    .hero-image {
-      width: 100%;
-      height: 240px;
-      object-fit: cover;
-      border: 1px solid var(--rule);
-      margin-bottom: 18px;
-      background: var(--paper3);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-image-placeholder {
-      width: 100%;
-      height: 240px;
-      background: linear-gradient(135deg, var(--paper3) 0%, var(--paper2) 100%);
-      border: 1px solid var(--rule);
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-image-placeholder::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 6px,
-        rgba(0,0,0,.03) 6px,
-        rgba(0,0,0,.03) 12px
-      );
-    }
-    .hero-image-placeholder .img-label {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--muted);
-      letter-spacing: .1em;
-      z-index: 1;
-    }
+  /* ── INTRO BOX ── */
+  .intro-box {
+    background: var(--paper2);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--ink);
+    border-radius: 0 0 var(--r3) var(--r3);
+    padding: 22px 26px;
+    margin-bottom: 28px;
+  }
+  .intro-box .ib-label {
+    font-family: var(--mono); font-size: 9px; font-weight: 500;
+    letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .intro-box h2 {
+    font-family: var(--serif); font-size: 1.15rem; font-weight: 700;
+    color: var(--ink); margin-bottom: 8px;
+  }
+  .intro-box p {
+    font-family: var(--body); font-size: .86rem; font-weight: 300;
+    color: var(--ink3); line-height: 1.7; margin-bottom: 0;
+  }
+  .intro-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .ipill {
+    font-family: var(--mono); font-size: 9px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px;
+    border: 1px solid var(--rule2); color: var(--muted); background: var(--white);
+  }
 
-    /* column rule between hero stories */
-    .hero-pair {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-    }
-    .hero-pair > *:first-child { border-right: 1px solid var(--rule); padding-right: 24px; }
-    .hero-pair > *:last-child  { padding-left: 24px; }
+  /* ── HERO GRID ── */
+  .hero-grid {
+    display: grid; grid-template-columns: 1fr 340px;
+    grid-template-rows: 1fr 1fr; gap: 0;
+    border: 1px solid var(--rule); background: var(--rule);
+    border-radius: var(--r3); overflow: hidden; margin-bottom: 36px;
+  }
+  .hero-main {
+    grid-column: 1; grid-row: 1 / 3;
+    background: var(--white); padding: 38px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    min-height: 440px; position: relative; overflow: hidden;
+  }
+  .hero-main::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg, rgba(184,134,11,.03) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .h-num {
+    position: absolute; top: 22px; right: 32px;
+    font-family: var(--serif); font-size: 7rem; font-weight: 900;
+    color: rgba(0,0,0,.03); line-height: 1; user-select: none;
+  }
+  .h-kicker {
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--red);
+    margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+  }
+  .h-kicker::before { content: ''; width: 24px; height: 2px; background: var(--red); flex-shrink: 0; }
+  .hero-main h1 {
+    font-family: var(--serif); font-size: clamp(1.7rem, 2.8vw, 2.7rem);
+    font-weight: 900; line-height: 1.12; letter-spacing: -.02em;
+    color: var(--ink); margin-bottom: 14px;
+  }
+  .h-deck {
+    font-family: var(--body); font-size: .96rem; font-weight: 300;
+    font-style: italic; color: var(--ink3);
+    border-left: 3px solid var(--gold); padding-left: 14px;
+    line-height: 1.65; margin-bottom: 20px;
+  }
+  .h-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .h-by { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .06em; }
+  .h-by strong { color: var(--gold); }
+  .btn-read {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink);
+    padding: 7px 16px; border: 1px solid var(--ink);
+    border-radius: var(--r); transition: background .2s, color .2s; margin-left: auto;
+  }
+  .btn-read:hover { background: var(--ink); color: var(--paper); }
+  .btn-read svg { transition: transform .2s; }
+  .btn-read:hover svg { transform: translateX(3px); }
 
-    /* ─── BRIEF ITEMS ────────────────────────────────── */
-    .brief-item {
-      padding: 14px 0;
-      border-bottom: 1px solid var(--rule);
-    }
-    .brief-item:last-child { border-bottom: none; }
-    .brief-item h4 {
-      font-family: var(--serif);
-      font-size: 0.95rem;
-      font-weight: 700;
-      line-height: 1.3;
-      margin-bottom: 4px;
-      color: var(--ink);
-    }
-    .brief-item p {
-      font-size: 0.82rem;
-      color: var(--muted);
-      line-height: 1.45;
-      font-weight: 300;
-    }
-    .brief-item time {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      color: var(--gold);
-      letter-spacing: .08em;
-      display: block;
-      margin-top: 5px;
-    }
+  .hero-side {
+    background: var(--paper2); padding: 24px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .hero-side + .hero-side { border-top: 1px solid var(--rule); }
+  .hero-side h2 {
+    font-family: var(--serif); font-size: 1rem; font-weight: 700;
+    line-height: 1.3; color: var(--ink); margin: 8px 0 7px;
+  }
+  .hero-side p { font-family: var(--body); font-size: 13px; font-weight: 300; color: var(--ink3); line-height: 1.5; }
+  .sfoot { display: flex; align-items: center; justify-content: space-between; margin-top: 13px; }
+  .sfoot time { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .07em; }
+  .arr { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .1em; color: var(--gold); text-transform: uppercase; }
+  .arr:hover { color: var(--gold2); }
 
-    /* ─── SIDE ITEMS ─────────────────────────────────── */
-    .side-item {
-      padding: 14px 0;
-      border-bottom: 1px solid var(--rule);
-    }
-    .side-item:last-child { border-bottom: none; }
-    .side-item .side-tag { margin-bottom: 6px; }
-    .side-item h4 {
-      font-family: var(--serif);
-      font-size: 0.9rem;
-      font-weight: 700;
-      line-height: 1.3;
-      margin-bottom: 4px;
-    }
-    .side-item p {
-      font-size: 0.78rem;
-      color: var(--muted);
-      line-height: 1.4;
-    }
+  /* ── TWO COLUMN ── */
+  .two-col { display: grid; grid-template-columns: 1fr 310px; gap: 32px; align-items: start; }
 
-    /* ─── OPINION QUOTE ──────────────────────────────── */
-    .opinion-block {
-      background: var(--ink);
-      color: var(--paper);
-      padding: 22px 20px;
-      margin: 22px 0;
-      position: relative;
-    }
-    .opinion-block::before {
-      content: '\201C';
-      font-family: var(--serif);
-      font-size: 5rem;
-      color: var(--gold);
-      position: absolute;
-      top: -18px;
-      left: 14px;
-      line-height: 1;
-    }
-    .opinion-block blockquote {
-      font-family: var(--serif);
-      font-size: 1rem;
-      font-style: italic;
-      line-height: 1.5;
-      padding-top: 20px;
-    }
-    .opinion-block cite {
-      display: block;
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: .1em;
-      color: var(--gold);
-      margin-top: 10px;
-      font-style: normal;
-    }
+  /* ── SECTION HEADER ── */
+  .shd { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+  .shd h3 { font-family: var(--serif); font-size: 1.2rem; font-weight: 900; color: var(--ink); }
+  .shd .rl { flex: 1; height: 1px; background: var(--rule); }
+  .shd .ct { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .1em; }
 
-    /* ─── DATA TABLE ─────────────────────────────────── */
-    .data-table-wrap {
-      overflow-x: auto;
-      margin-bottom: 40px;
-    }
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.82rem;
-    }
-    .data-table thead tr {
-      background: var(--ink);
-      color: var(--paper);
-    }
-    .data-table th {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      padding: 10px 14px;
-      text-align: left;
-      white-space: nowrap;
-    }
-    .data-table td {
-      padding: 11px 14px;
-      border-bottom: 1px solid var(--rule);
-      vertical-align: top;
-    }
-    .data-table tbody tr:nth-child(even) td { background: var(--paper2); }
-    .data-table tbody tr:hover td { background: var(--paper3); }
-    .data-table .story-title { font-weight: 600; color: var(--ink); }
-    .data-table .story-source {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      color: var(--muted);
-    }
-    .data-table .story-link {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      color: var(--gold);
-      border: 1px solid var(--gold);
-      padding: 2px 8px;
-      white-space: nowrap;
-      transition: background .15s, color .15s;
-    }
-    .data-table .story-link:hover {
-      background: var(--gold);
-      color: var(--white);
-    }
+  /* ── CARD GRID ── */
+  .cg { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: var(--r2); overflow: hidden; }
+  .cg2 { grid-template-columns: repeat(2,1fr); }
+  .card { background: var(--white); padding: 20px; display: flex; flex-direction: column; transition: background .18s; cursor: pointer; }
+  .card:hover { background: var(--paper2); }
+  .card .cb { margin-bottom: 10px; }
+  .card h4 { font-family: var(--serif); font-size: .95rem; font-weight: 700; line-height: 1.3; color: var(--ink); margin-bottom: 7px; flex: 1; }
+  .card p { font-family: var(--body); font-size: .79rem; font-weight: 300; color: var(--ink3); line-height: 1.55; margin-bottom: 12px; }
+  .cft { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--rule); padding-top: 10px; margin-top: auto; }
+  .cft time { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .06em; }
+  .cft a { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .08em; color: var(--gold); text-transform: uppercase; }
+  .cft a:hover { color: var(--gold2); }
 
-    /* ─── FULL-WIDTH SECTIONS ────────────────────────── */
-    .full-section {
-      border-top: 3px double var(--ink);
-      padding: 36px 0;
-    }
-    .full-section + .full-section { border-top: 1px solid var(--rule); }
+  /* ── BRIEF LIST ── */
+  .blist { list-style: none; }
+  .bi { display: grid; grid-template-columns: 26px 1fr auto; gap: 11px; align-items: start; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+  .bi:last-child { border-bottom: none; }
+  .bn { font-family: var(--serif); font-size: 1.4rem; font-weight: 900; color: var(--rule2); line-height: 1; padding-top: 2px; }
+  .bb h5 { font-family: var(--serif); font-size: .9rem; font-weight: 700; color: var(--ink); line-height: 1.3; margin-bottom: 3px; }
+  .bb p { font-family: var(--body); font-size: .77rem; font-weight: 300; color: var(--ink3); line-height: 1.45; }
+  .bt { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: .08em; white-space: nowrap; padding-top: 3px; }
 
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-    .section-header h2 {
-      font-family: var(--serif);
-      font-size: 1.4rem;
-      font-weight: 900;
-      letter-spacing: -.02em;
-      color: var(--ink);
-    }
-    .section-header .section-rule {
-      flex: 1;
-      height: 1px;
-      background: var(--rule);
-    }
-    .section-header .section-count {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      color: var(--muted);
-      letter-spacing: .1em;
-    }
+  /* ── FULL SECTION ── */
+  .fs { padding: 32px 0; border-top: 1px solid var(--rule); }
 
-    /* card grid */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1px;
-      background: var(--rule);
-      border: 1px solid var(--rule);
-    }
-    .card {
-      background: var(--white);
-      padding: 20px;
-      transition: background .15s;
-    }
-    .card:hover { background: var(--paper2); }
-    .card .card-tag { margin-bottom: 8px; }
-    .card h3 {
-      font-family: var(--serif);
-      font-size: 1.05rem;
-      font-weight: 700;
-      line-height: 1.25;
-      margin-bottom: 8px;
-      color: var(--ink);
-    }
-    .card p {
-      font-size: 0.82rem;
-      color: var(--muted);
-      line-height: 1.5;
-      font-weight: 300;
-    }
-    .card-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 12px;
-    }
-    .card-meta time {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      color: var(--muted);
-      letter-spacing: .07em;
-    }
+  /* ── SIDEBAR ── */
+  .sidebar { display: flex; flex-direction: column; gap: 20px; }
+  .wid { background: var(--white); border: 1px solid var(--rule); border-radius: var(--r2); overflow: hidden; }
+  .wid-hd { background: var(--ink); padding: 10px 16px; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--paper); border-bottom: 1px solid var(--rule); }
+  .wid-hd span { color: var(--gold); }
+  .wid-bd { padding: 14px 16px; }
+  .nums { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  .nc { text-align: center; padding: 11px 6px; background: var(--paper2); border-radius: var(--r); }
+  .nc .v { font-family: var(--serif); font-size: 1.55rem; font-weight: 900; line-height: 1; margin-bottom: 3px; }
+  .nc .l { font-family: var(--mono); font-size: 8px; font-weight: 500; letter-spacing: .1em; color: var(--muted); text-transform: uppercase; line-height: 1.3; }
+  .trnd-item { display: grid; grid-template-columns: 24px 1fr; gap: 8px; align-items: start; padding: 9px 0; border-bottom: 1px solid var(--rule); }
+  .trnd-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .tr { font-family: var(--serif); font-size: 1rem; font-weight: 900; color: var(--rule2); line-height: 1; padding-top: 2px; }
+  .tt { font-family: var(--body); font-size: .81rem; color: var(--ink3); line-height: 1.3; }
 
-    /* ─── FOOTER ─────────────────────────────────────── */
-    footer {
-      background: var(--ink);
-      color: var(--paper);
-      padding: 40px 0 24px;
-      border-top: 3px solid var(--gold);
-    }
-    .footer-top {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 40px;
-      padding-bottom: 32px;
-      border-bottom: 1px solid #333;
-    }
-    .footer-brand h2 {
-      font-family: var(--serif);
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: var(--gold);
-      letter-spacing: -.02em;
-      margin-bottom: 8px;
-    }
-    .footer-brand p {
-      font-size: 0.8rem;
-      color: #888;
-      line-height: 1.6;
-      font-weight: 300;
-    }
-    .footer-col h4 {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 12px;
-    }
-    .footer-col a {
-      display: block;
-      font-size: 0.82rem;
-      color: #aaa;
-      margin-bottom: 8px;
-      transition: color .15s;
-    }
-    .footer-col a:hover { color: var(--paper); }
-    .footer-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 20px;
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      color: #555;
-      letter-spacing: .08em;
-    }
-    .footer-bottom span { color: var(--gold); }
+  /* ── OPINION WIDGET ── */
+  .opin { background: var(--ink); color: var(--paper); padding: 20px 18px; position: relative; }
+  .opin::before { content: '\201C'; font-family: var(--serif); font-size: 5rem; color: var(--gold); position: absolute; top: -16px; left: 12px; line-height: 1; }
+  .opin blockquote { font-family: var(--body); font-size: .88rem; font-style: italic; line-height: 1.6; padding-top: 24px; }
+  .opin cite { display: block; font-family: var(--mono); font-size: 9px; color: var(--gold); margin-top: 10px; font-style: normal; letter-spacing: .1em; }
 
-    /* ─── BREAKING BANNER ────────────────────────────── */
-    .breaking-banner {
-      background: var(--red);
-      color: white;
-      padding: 9px 0;
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      letter-spacing: .1em;
-      text-align: center;
-      animation: pulse-bg 3s ease-in-out infinite;
-    }
-    @keyframes pulse-bg {
-      0%,100% { background: var(--red); }
-      50%      { background: #a93226; }
-    }
-    .breaking-banner strong { text-transform: uppercase; margin-right: 12px; }
+  /* ── DATA TABLE ── */
+  .dtbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: var(--r2); }
+  .dtbl { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 660px; }
+  .dtbl thead { background: var(--ink); }
+  .dtbl th { font-family: var(--mono); font-size: 9px; font-weight: 500; letter-spacing: .13em; text-transform: uppercase; color: var(--paper); padding: 10px 15px; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  .dtbl td { padding: 11px 15px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+  .dtbl tbody tr:last-child td { border-bottom: none; }
+  .dtbl tbody tr { background: var(--white); transition: background .15s; }
+  .dtbl tbody tr:nth-child(even) { background: var(--paper2); }
+  .dtbl tbody tr:hover { background: var(--paper3); }
+  .st { font-family: var(--serif); font-size: .86rem; font-weight: 600; color: var(--ink); line-height: 1.3; }
+  .ss { font-family: var(--mono); font-size: 9px; letter-spacing: .05em; color: var(--muted); margin-top: 2px; }
+  .idx { font-family: var(--serif); font-size: .95rem; font-weight: 900; color: var(--rule2); }
+  .tlnk { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .08em; color: var(--gold); text-transform: uppercase; border: 1px solid rgba(184,134,11,.4); padding: 3px 9px; border-radius: var(--r); white-space: nowrap; transition: background .15s; }
+  .tlnk:hover { background: rgba(184,134,11,.1); }
 
-    /* ─── DIVIDER ─────────────────────────────────────── */
-    .ornament-divider {
-      text-align: center;
-      color: var(--rule);
-      font-size: 1.1rem;
-      letter-spacing: .5em;
-      margin: 0 0 28px;
-    }
+  /* ── NEWSLETTER ── */
+  .nl-box { background: var(--paper2); border: 1px solid var(--rule); border-radius: var(--r2); padding: 18px; }
+  .nl-title { font-family: var(--serif); font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .nl-desc { font-family: var(--body); font-size: .78rem; font-weight: 300; color: var(--muted); margin-bottom: 12px; line-height: 1.55; }
+  .nl-inp { width: 100%; background: var(--white); border: 1px solid var(--rule2); color: var(--ink); font-family: var(--mono); font-size: 12px; padding: 8px 11px; border-radius: var(--r); outline: none; margin-bottom: 8px; transition: border-color .2s; }
+  .nl-inp:focus { border-color: var(--gold); }
+  .nl-btn { width: 100%; background: var(--ink); color: var(--paper); font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; padding: 9px; border: none; border-radius: var(--r); cursor: pointer; transition: background .18s; }
+  .nl-btn:hover { background: var(--ink2); }
 
-    /* ─── RESPONSIVE ──────────────────────────────────── */
-    @media (max-width: 900px) {
-      .front-grid {
-        grid-template-columns: 1fr;
-      }
-      .col-left, .col-right {
-        border: none;
-        border-top: 1px solid var(--rule);
-        padding: 20px 0;
-      }
-      .col-center { padding: 20px 0; }
-      .hero-pair { grid-template-columns: 1fr; gap: 24px; }
-      .hero-pair > *:first-child { border-right: none; padding-right: 0; border-bottom: 1px solid var(--rule); padding-bottom: 24px; }
-      .hero-pair > *:last-child  { padding-left: 0; }
-      .footer-top { grid-template-columns: 1fr 1fr; }
-      .masthead-top { flex-direction: column; align-items: center; gap: 10px; text-align: center; }
-    }
-    @media (max-width: 600px) {
-      .container { padding: 0 16px; }
-      .footer-top { grid-template-columns: 1fr; gap: 24px; }
-      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
-      .card-grid { grid-template-columns: 1fr; }
-    }
+
+  /* ══════════════════════════════════════
+     PERSPECTIVES TAB STYLES
+  ══════════════════════════════════════ */
+
+  /* Intro banner */
+  .persp-intro {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-top: 4px solid var(--persp);
+    border-radius: 0 0 var(--r3) var(--r3);
+    padding: 30px 32px;
+    margin: 22px 0 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .pi-left { border-right: 1px solid var(--rule); padding-right: 32px; }
+  .pi-label {
+    font-family: var(--mono); font-size: 9px; font-weight: 500;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: var(--persp); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pi-label::before { content: ''; width: 20px; height: 2px; background: var(--persp); }
+  .persp-intro h2 {
+    font-family: var(--serif); font-size: 1.4rem; font-weight: 900;
+    color: var(--ink); margin-bottom: 10px; line-height: 1.2;
+  }
+  .persp-intro p {
+    font-family: var(--body); font-size: .87rem; font-weight: 300;
+    color: var(--ink3); line-height: 1.72; margin-bottom: 8px;
+  }
+  .persp-intro p:last-child { margin-bottom: 0; }
+  .pi-concept {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .pi-step {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 14px; background: var(--paper2);
+    border-radius: var(--r2); border-left: 3px solid var(--persp);
+  }
+  .pi-step-num {
+    font-family: var(--serif); font-size: 1.4rem; font-weight: 900;
+    color: var(--persp); line-height: 1; flex-shrink: 0; padding-top: 2px;
+  }
+  .pi-step-txt { font-family: var(--body); font-size: .84rem; font-weight: 300; color: var(--ink3); line-height: 1.6; }
+  .pi-step-txt strong { color: var(--ink); font-weight: 600; }
+
+  /* Byline formula */
+  .byline-formula {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin-top: 16px; padding: 14px 16px;
+    background: var(--paper3); border-radius: var(--r2);
+    border: 1px solid var(--rule2);
+  }
+  .bf-part {
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: .08em; color: var(--ink3);
+    background: var(--white); padding: 5px 12px;
+    border: 1px solid var(--rule2); border-radius: var(--r);
+  }
+  .bf-part.ai { color: var(--sky); border-color: rgba(29,111,164,.3); background: rgba(29,111,164,.05); }
+  .bf-part.human { color: var(--gold); border-color: rgba(184,134,11,.35); background: rgba(184,134,11,.06); }
+  .bf-part.result { color: var(--persp); border-color: rgba(107,61,138,.3); background: rgba(107,61,138,.06); font-weight: 500; }
+  .bf-op { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; color: var(--muted); }
+
+  /* Topic filter */
+  .topic-filter { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 22px; }
+  .tf-btn {
+    font-family: var(--mono); font-size: 9.5px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase;
+    padding: 5px 13px; border: 1px solid var(--rule2);
+    border-radius: 20px; color: var(--muted); cursor: pointer;
+    background: var(--white); transition: all .18s;
+  }
+  .tf-btn:hover { color: var(--ink); border-color: var(--muted); }
+  .tf-btn.active { color: var(--persp); border-color: rgba(107,61,138,.4); background: rgba(107,61,138,.07); }
+
+  /* Article cards (Perspectives) */
+  .art-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: var(--r2); overflow: hidden; }
+  .art-grid-full { grid-template-columns: 1fr; }
+  .art-card { background: var(--white); padding: 26px; display: flex; flex-direction: column; transition: background .18s; cursor: pointer; }
+  .art-card:hover { background: var(--paper2); }
+  .art-card.featured { background: var(--paper2); }
+  .art-label {
+    font-family: var(--mono); font-size: 9.5px; font-weight: 500;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--persp);
+    margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+  }
+  .art-label::before { content: ''; width: 18px; height: 2px; background: var(--persp); }
+  .art-card h3 {
+    font-family: var(--serif); font-size: 1.2rem; font-weight: 900;
+    line-height: 1.22; color: var(--ink); margin-bottom: 10px; letter-spacing: -.01em;
+  }
+  .art-card.featured h3 { font-size: clamp(1.3rem,2.2vw,1.8rem); }
+  .art-excerpt {
+    font-family: var(--body); font-size: .87rem; font-weight: 300;
+    color: var(--ink3); line-height: 1.72; margin-bottom: 18px; flex: 1;
+  }
+  .art-excerpt em { font-style: italic; }
+
+  /* THE BYLINE BLOCK — the new authorship concept */
+  .byline-block {
+    display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+    background: var(--paper2); border: 1px solid var(--rule);
+    border-radius: var(--r2); margin-top: auto; border-left: 3px solid var(--persp);
+  }
+  .by-ava {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--ink); display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-size: .8rem; font-weight: 700; color: var(--paper);
+    flex-shrink: 0; border: 1px solid var(--rule);
+  }
+  .by-text { flex: 1; min-width: 0; }
+  .by-written { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .07em; color: var(--muted); text-transform: uppercase; line-height: 1.3; }
+  .by-written em { font-style: normal; color: var(--sky); }
+  .by-sep { font-family: var(--mono); font-size: 8px; color: var(--rule2); margin: 2px 0; letter-spacing: .04em; }
+  .by-prompted { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .07em; color: var(--muted); text-transform: uppercase; line-height: 1.3; }
+  .by-prompted em { font-style: normal; color: var(--gold); }
+  .by-date { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: .07em; white-space: nowrap; flex-shrink: 0; }
+
+  .btn-gold {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--persp);
+    padding: 7px 16px; border: 1px solid rgba(107,61,138,.4);
+    border-radius: var(--r); transition: background .2s; margin-top: 14px; align-self: flex-start;
+  }
+  .btn-gold:hover { background: rgba(107,61,138,.08); }
+  .btn-gold svg { transition: transform .2s; }
+  .btn-gold:hover svg { transform: translateX(3px); }
+
+  /* Submit CTA */
+  .submit-cta {
+    background: var(--ink); color: var(--paper);
+    border-radius: var(--r2); padding: 30px 32px;
+    margin-top: 32px; display: flex; align-items: center;
+    justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  }
+  .submit-cta h3 { font-family: var(--serif); font-size: 1.3rem; font-weight: 900; color: var(--paper); margin-bottom: 6px; }
+  .submit-cta h3 span { color: var(--gold); }
+  .submit-cta p { font-family: var(--body); font-size: .84rem; font-weight: 300; color: rgba(245,240,232,.65); line-height: 1.65; max-width: 500px; }
+  .sub-btn { flex-shrink: 0; background: var(--gold); color: var(--ink); font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; padding: 11px 22px; border: none; border-radius: var(--r); cursor: pointer; white-space: nowrap; transition: background .18s; }
+  .sub-btn:hover { background: var(--gold2); }
+
+  /* ── FOOTER ── */
+  footer { background: var(--ink); color: var(--paper); padding: 48px 0 24px; margin-top: 40px; border-top: 3px solid var(--gold); }
+  .ftg { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 36px; border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 22px; }
+  .ft-name { font-family: var(--serif); font-size: 1.8rem; font-weight: 900; letter-spacing: -.02em; color: var(--paper); margin-bottom: 3px; }
+  .ft-name span { color: var(--gold); }
+  .ft-sub { font-family: var(--mono); font-size: 9px; font-weight: 500; letter-spacing: .18em; color: rgba(245,240,232,.4); text-transform: uppercase; margin-bottom: 12px; }
+  .ft-desc { font-family: var(--body); font-size: .82rem; font-weight: 300; color: rgba(245,240,232,.6); line-height: 1.65; margin-bottom: 14px; }
+  .socials { display: flex; gap: 7px; flex-wrap: wrap; }
+  .sbtn { font-family: var(--mono); font-size: 9px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; padding: 5px 11px; border: 1px solid rgba(255,255,255,.15); border-radius: var(--r); color: rgba(245,240,232,.6); transition: color .15s, border-color .15s; }
+  .sbtn:hover { color: var(--gold); border-color: rgba(184,134,11,.5); }
+  .ftcol h4 { font-family: var(--mono); font-size: 9px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: rgba(245,240,232,.4); margin-bottom: 13px; }
+  .ftcol a { display: block; font-family: var(--body); font-size: .82rem; font-weight: 300; color: rgba(245,240,232,.6); margin-bottom: 8px; transition: color .15s; }
+  .ftcol a:hover { color: var(--gold); }
+  .ft-bot { display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 9.5px; color: rgba(245,240,232,.3); letter-spacing: .06em; flex-wrap: wrap; gap: 8px; }
+  .ft-bot a { color: var(--gold); }
+
+  /* ── ANIMATIONS ── */
+  .fu { animation: fadeUp .45s ease both; }
+  .d1{animation-delay:.08s} .d2{animation-delay:.16s} .d3{animation-delay:.24s}
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── ORNAMENT ── */
+  .ornament { text-align: center; color: var(--rule); letter-spacing: .4em; font-size: 1rem; margin: 6px 0 20px; }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:1060px){
+    .hero-grid{grid-template-columns:1fr 300px}
+    .cg{grid-template-columns:repeat(2,1fr)}
+    .two-col{grid-template-columns:1fr 280px}
+    .ftg{grid-template-columns:1fr 1fr;gap:28px}
+    .persp-intro{grid-template-columns:1fr}
+    .pi-left{border-right:none;padding-right:0;border-bottom:1px solid var(--rule);padding-bottom:24px}
+  }
+  @media(max-width:780px){
+    .hero-grid{grid-template-columns:1fr}
+    .hero-main{grid-column:1;grid-row:1;min-height:320px;padding:26px}
+    .hero-side{grid-column:1}
+    .two-col{grid-template-columns:1fr}
+    .sidebar{display:grid;grid-template-columns:repeat(2,1fr)}
+    .hbtn-g,.hdr-actions{display:none}
+    .art-grid{grid-template-columns:1fr}
+    .mast-inner{grid-template-columns:1fr;text-align:center;gap:8px}
+    .mast-left,.mast-right{display:none}
+  }
+  @media(max-width:560px){
+    .wrap{padding:0 16px}
+    .cg,.cg2{grid-template-columns:1fr}
+    .sidebar{grid-template-columns:1fr}
+    .ftg{grid-template-columns:1fr;gap:22px}
+    .hero-main h1{font-size:1.5rem}
+    .ft-bot{flex-direction:column;align-items:flex-start}
+    .tab-btn{padding:12px 14px;font-size:13px}
+    .submit-cta{flex-direction:column}
+  }
   </style>
 </head>
 <body>
 
-  <!-- ─── BREAKING BANNER ─── -->
-  <div class="breaking-banner">
-    <strong>Breaking</strong> G7 Finance Ministers convene emergency session amid global bond market turbulence — Markets open lower across Asia
-  </div>
-
-  <!-- ─── TICKER ─── -->
-  <div class="ticker-wrap">
-    <div class="container">
-      <div class="ticker-inner">
-        <div class="ticker-label">LIVE FEED</div>
-        <div class="ticker-track" id="ticker">
-          <span>Tunisia GDP growth revised to 1.8% for Q1 2026</span>
-          <span>OpenAI announces GPT-5 multimodal capabilities</span>
-          <span>EU Digital Markets Act enforcement actions against three major platforms</span>
-          <span>MENA tech investment up 34% year-over-year</span>
-          <span>Global AI governance summit set for Geneva — June 2026</span>
-          <span>Tunisian fintech sector secures record $220M in foreign investment</span>
-          <span>Semiconductor supply chain realignment accelerates across Southeast Asia</span>
-          <span>Tunisia GDP growth revised to 1.8% for Q1 2026</span>
-          <span>OpenAI announces GPT-5 multimodal capabilities</span>
-          <span>EU Digital Markets Act enforcement actions against three major platforms</span>
-          <span>MENA tech investment up 34% year-over-year</span>
-          <span>Global AI governance summit set for Geneva — June 2026</span>
-          <span>Tunisian fintech sector secures record $220M in foreign investment</span>
-          <span>Semiconductor supply chain realignment accelerates across Southeast Asia</span>
-        </div>
-      </div>
+<!-- ── TICKER ── -->
+<div class="ticker" role="marquee" aria-label="Live news feed">
+  <div class="tick-row wrap">
+    <div class="tick-lbl">LIVE</div>
+    <div class="tick-track">
+      <span>Tunisia GDP growth revised to 1.8% for Q1 2026</span>
+      <span>OpenAI announces next-generation multimodal capabilities</span>
+      <span>EU Digital Markets Act enforcement begins against three platforms</span>
+      <span>MENA tech investment surges 34% year-over-year</span>
+      <span>Global AI governance summit confirmed for Geneva, June 2026</span>
+      <span>Tunisian fintech sector secures record $220M in foreign capital</span>
+      <span>G7 Finance Ministers convene emergency session on bond markets</span>
+      <span>AfCFTA digital trade protocol reaches ratification quorum</span>
+      <span>Tunisia GDP growth revised to 1.8% for Q1 2026</span>
+      <span>OpenAI announces next-generation multimodal capabilities</span>
+      <span>EU Digital Markets Act enforcement begins against three platforms</span>
+      <span>MENA tech investment surges 34% year-over-year</span>
+      <span>Global AI governance summit confirmed for Geneva, June 2026</span>
+      <span>Tunisian fintech sector secures record $220M in foreign capital</span>
+      <span>G7 Finance Ministers convene emergency session on bond markets</span>
+      <span>AfCFTA digital trade protocol reaches ratification quorum</span>
     </div>
   </div>
+</div>
 
-  <!-- ─── MASTHEAD ─── -->
-  <div class="masthead">
-    <div class="container">
-      <div class="masthead-top">
-        <div class="masthead-date" id="today-date">WEDNESDAY · APRIL 8, 2026</div>
-        <div class="masthead-title">
-          <h1>ANN <span>Intelligence</span> Feed</h1>
-          <div class="masthead-tagline">Global Strategic Monitoring &nbsp;·&nbsp; Digital News Sovereignty</div>
-        </div>
-        <div class="masthead-edition">EST. 2024<br>VOL. II · NO. 98</div>
-      </div>
-      <nav class="primary-nav" aria-label="Primary navigation">
-        <a href="#front" class="active">Front Page</a>
-        <span class="sep" aria-hidden="true">|</span>
-        <a href="#technology">Technology</a>
-        <span class="sep" aria-hidden="true">|</span>
-        <a href="#tunisia">Tunisia</a>
-        <span class="sep" aria-hidden="true">|</span>
-        <a href="#world">World</a>
-        <span class="sep" aria-hidden="true">|</span>
-        <a href="#economy">Economy</a>
-        <span class="sep" aria-hidden="true">|</span>
-        <a href="#analysis">Analysis</a>
-        <span class="sep" aria-hidden="true">|</span>
-        <a href="#data">Data Desk</a>
-      </nav>
+<!-- ── MASTHEAD ── -->
+<header class="masthead" role="banner">
+  <div class="mast-inner">
+    <div class="mast-left">
+      <div class="date-line" id="today-date">THURSDAY · APRIL 10, 2026</div>
+      <div>Global News Intelligence</div>
+    </div>
+    <div class="mast-center">
+      <div class="site-name">ANN <span>Feed</span></div>
+      <div class="site-tagline">AI-Curated News &nbsp;·&nbsp; Human-Prompted Perspectives &nbsp;·&nbsp; Est. 2024</div>
+    </div>
+    <div class="mast-right">
+      <div class="edition">VOL. II · NO. 100</div>
+      <div>annfeed.com</div>
     </div>
   </div>
+  <div class="hdr-actions">
+    <button class="hbtn hbtn-g">Sign In</button>
+    <button class="hbtn hbtn-s">Subscribe Free</button>
+  </div>
+</header>
 
-  <!-- ─── MAIN ─── -->
-  <main id="front">
-    <div class="page-body">
-      <div class="container">
+<!-- ── PRIMARY NAV ── -->
+<nav class="pnav" aria-label="Sections">
+  <div class="pnav-row">
+    <a href="#front" class="active">Front Page</a>
+    <span class="pnav-sep" aria-hidden="true">|</span>
+    <a href="#tech">Technology</a>
+    <span class="pnav-sep" aria-hidden="true">|</span>
+    <a href="#tunisia">Tunisia</a>
+    <span class="pnav-sep" aria-hidden="true">|</span>
+    <a href="#world">World</a>
+    <span class="pnav-sep" aria-hidden="true">|</span>
+    <a href="#economy">Economy</a>
+    <span class="pnav-sep" aria-hidden="true">|</span>
+    <a href="#data">Data Desk</a>
+  </div>
+</nav>
 
-        <!-- ── THREE-COLUMN FRONT PAGE ── -->
-        <div class="front-grid">
+<!-- ── TAB BAR ── -->
+<div class="tab-bar" role="navigation" aria-label="Main tabs">
+  <div class="tab-row wrap">
+    <button class="tab-btn active" data-tab="news">
+      News Feed
+      <span class="tab-badge news-badge">AI AGENT</span>
+    </button>
+    <button class="tab-btn persp-tab" data-tab="perspectives">
+      Perspectives
+      <span class="tab-badge persp-badge">HUMAN + AI</span>
+    </button>
+  </div>
+</div>
 
-          <!-- LEFT COLUMN -->
-          <aside class="col-left">
-            <div class="section-label"><strong>Latest</strong> Briefs</div>
 
-            <div class="brief-item">
-              <div class="tag red">Tunisia</div>
-              <h4>Central Bank Holds Rate at 8%</h4>
-              <p>The Banque Centrale de Tunisie maintained its benchmark rate, citing persistent inflationary pressures from energy imports.</p>
-              <time>08 APR 2026 · 09:14</time>
-            </div>
+<!-- ══════════════════════════════════════
+     NEWS FEED PANEL
+══════════════════════════════════════ -->
+<div class="panel active" id="tab-news">
+  <div class="page-body">
+    <div class="wrap">
 
-            <div class="brief-item">
-              <div class="tag">AI</div>
-              <h4>Mistral Releases 72B Parameter Open Model</h4>
-              <p>The Paris-based lab published weights under an Apache 2.0 license, challenging proprietary frontier models.</p>
-              <time>08 APR 2026 · 08:41</time>
-            </div>
+      <!-- SITE INTRO -->
+      <div class="intro-box fu">
+        <div class="ib-label">How ANN Feed Works</div>
+        <h2>Your daily briefing, sourced by AI from the world's most trusted newsrooms.</h2>
+        <p>
+          ANN Feed runs an AI agent that scrapes official RSS feeds from Reuters, BBC, Al Jazeera, AP, TAP Tunisia, and other verified outlets several times a day.
+          The agent reads each headline, pulls the key facts, and writes a short 2-sentence brief — no opinion, no filler, just what happened and why it matters.
+          Every story links back to its original source so you can always read deeper. Nothing is invented. Everything is cited.
+        </p>
+        <div class="intro-pills">
+          <span class="ipill">📡 Live RSS Scraping</span>
+          <span class="ipill">🤖 AI-Written Briefs</span>
+          <span class="ipill">🔗 Original Source Links</span>
+          <span class="ipill">🕐 Updated Multiple Times Daily</span>
+        </div>
+      </div>
 
-            <div class="brief-item">
-              <div class="tag">Geopolitics</div>
-              <h4>Libya Ceasefire Talks Resume in Tunis</h4>
-              <p>UN-backed negotiations between rival factions resumed at the Tunis Forum, with renewed international pressure for a durable deal.</p>
-              <time>07 APR 2026 · 22:05</time>
-            </div>
+      <!-- AI STATUS -->
+      <div class="ai-status">
+        <div class="ai-pulse"></div>
+        <strong>AI Agent Active</strong>
+        <span>— Monitoring Reuters · BBC · Al Jazeera · AP · TAP Tunisia · TechCrunch · IMF</span>
+        <span class="ai-upd" id="last-updated" style="font-family:var(--mono);font-size:9px;letter-spacing:.07em"></span>
+      </div>
 
-            <div class="brief-item">
-              <div class="tag">Economy</div>
-              <h4>IMF Projects MENA Growth at 3.1%</h4>
-              <p>Spring 2026 World Economic Outlook raised regional projections on the back of oil revenues and fiscal reforms.</p>
-              <time>07 APR 2026 · 17:30</time>
-            </div>
+      <!-- BREAKING -->
+      <div class="breaking fu d1">
+        <div class="brk-lbl"><span class="live-dot"></span>&nbsp;Breaking</div>
+        <div class="brk-msg">
+          <strong>G7 Finance Ministers convene emergency session</strong> amid global bond market turbulence — Asian markets open sharply lower as yields approach 2008-era highs
+        </div>
+      </div>
 
-            <div class="brief-item">
-              <div class="tag">Cyber</div>
-              <h4>European Critical Infrastructure Hit by DDoS Campaign</h4>
-              <p>Energy and transport operators across three EU member states reported coordinated disruptions attributed to state-linked actors.</p>
-              <time>07 APR 2026 · 14:00</time>
-            </div>
+      <!-- HERO GRID -->
+      <div class="hero-grid fu d1" id="front">
+        <article class="hero-main">
+          <div class="h-num" aria-hidden="true">01</div>
+          <div class="h-kicker">Analysis · Artificial Intelligence</div>
+          <h1>How Nations Are Racing to Legislate the Global AI Stack</h1>
+          <p class="h-deck">From Brussels to Beijing, governments are drafting framework laws that will determine who controls compute, data, and inference — and the window to shape that architecture is closing.</p>
+          <div class="h-meta">
+            <span class="tag t-sky">AI Policy</span>
+            <span class="tag t-dim">8 min read</span>
+            <div class="h-by">Sourced by <strong>ANN AI Agent</strong> · Apr 10, 2026</div>
+            <a href="#" class="btn-read">Full Brief <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </article>
+        <article class="hero-side">
+          <div>
+            <span class="tag t-gold">Tunisia</span>
+            <h2>Tech Corridor Pivots to African Markets as EU Demand Contracts</h2>
+            <p>Three Tunis-based software firms closed Series A rounds totalling $47M, all targeting Francophone African fintech and agritech markets this quarter.</p>
+          </div>
+          <div class="sfoot"><time>Apr 10</time><a href="#" class="arr">Read →</a></div>
+        </article>
+        <article class="hero-side">
+          <div>
+            <span class="tag t-red">Cybersecurity</span>
+            <h2>Zero-Day Brokers and the Rise of AI-Assisted Surveillance</h2>
+            <p>Leaked procurement document reveals state demand for AI behavioural prediction tools far beyond publicly acknowledged surveillance programmes.</p>
+          </div>
+          <div class="sfoot"><time>Apr 9</time><a href="#" class="arr">Read →</a></div>
+        </article>
+      </div>
 
-            <div class="opinion-block">
-              <blockquote>
-                Digital sovereignty is not a luxury for emerging economies — it is the foundation of strategic autonomy in the 21st century.
-              </blockquote>
-              <cite>— ANN Editorial Board, April 2026</cite>
-            </div>
-          </aside>
+      <!-- MAIN + SIDEBAR -->
+      <div class="two-col fu d2">
+        <div>
 
-          <!-- CENTER COLUMN -->
-          <section class="col-center">
-            <div class="section-label"><strong>Top</strong> Stories</div>
+          <!-- BRIEFS -->
+          <section class="fs">
+            <div class="shd"><h3>Latest Briefs</h3><div class="rl"></div><div class="ct" id="brief-count">Updated 09:14</div></div>
+            <ul class="blist" id="news-briefs">
+              <li class="bi"><div class="bn">01</div><div class="bb"><h5>Central Bank of Tunisia Holds Benchmark Rate at 8%</h5><p>BCT maintained its policy rate for a third consecutive quarter citing persistent inflationary pressures from energy imports and weak dinar pass-through effects.</p></div><time class="bt">09:14</time></li>
+              <li class="bi"><div class="bn">02</div><div class="bb"><h5>Mistral Releases 72B Open Model Under Apache 2.0 Licence</h5><p>The Paris-based lab published full model weights publicly, intensifying the open-vs-closed frontier model debate and challenging proprietary alternatives.</p></div><time class="bt">08:41</time></li>
+              <li class="bi"><div class="bn">03</div><div class="bb"><h5>Libya Ceasefire Talks Resume in Tunis With Five New Delegations</h5><p>UN-backed negotiations resumed at the Tunis Forum — the first session with all five recognised stakeholder factions present since 2024.</p></div><time class="bt">07:55</time></li>
+              <li class="bi"><div class="bn">04</div><div class="bb"><h5>IMF Raises MENA Growth Forecast to 3.1% in Spring Outlook</h5><p>Revised upward from 2.7% on stronger Gulf consumption, oil revenues, and fiscal reform progress across three member states.</p></div><time class="bt">Apr 9</time></li>
+              <li class="bi"><div class="bn">05</div><div class="bb"><h5>EU Critical Infrastructure Hit by Coordinated DDoS Campaign</h5><p>Energy and transport operators across three member states reported sustained disruptions attributed by ENISA to state-linked threat actors.</p></div><time class="bt">Apr 9</time></li>
+            </ul>
+          </section>
 
-            <!-- HERO 1 -->
-            <article class="hero-story" id="hero-lead">
-              <div class="kicker">🔴 Analysis · Artificial Intelligence</div>
-              <!-- <div class="hero-image-placeholder">,<img src="" alt=""><span class="img-label">PHOTO / ILLUSTRATION</span></div> -->
-              <h2>The Great Rebalancing: How Nations Are Legislating the AI Stack</h2>
-              <p class="deck">
-                From Brussels to Beijing, governments are drafting framework laws that will determine who controls the compute, the data, and the inference layer of global artificial intelligence.
-              </p>
-              <p style="font-size:0.88rem; color:var(--ink2); line-height:1.65; margin-bottom:14px;">
-                The window to shape the regulatory architecture of artificial intelligence is narrowing rapidly. In Washington, the AI Accountability Act has cleared committee. In Brussels, delegated acts under the EU AI Act are being finalised. China's State Council published its third algorithmic governance circular of the year. And in Tunis, a working group inside the Ministry of Communication Technologies is drafting what may become the MENA region's first comprehensive AI liability regime.
-              </p>
-              <p style="font-size:0.88rem; color:var(--ink2); line-height:1.65; margin-bottom:14px;">
-                What is striking is not the legislative activity itself, but its convergence: across jurisdictions with radically different political systems, the same three concerns animate policymakers — compute concentration, data provenance, and decision auditability.
-              </p>
-              <div class="byline">By <span>ANN Intelligence Desk</span> &nbsp;·&nbsp; April 8, 2026 &nbsp;·&nbsp; 12 min read</div>
-            </article>
+          <div class="ornament">— ✦ —</div>
 
-            <div class="ornament-divider">— ✦ —</div>
-
-            <!-- HERO PAIR -->
-            <div class="hero-pair">
-              <article class="hero-story">
-                <div class="kicker">Economy</div>
-                <h2 style="font-size:1.25rem;">Tunisia's Tech Corridor Bets on African Markets</h2>
-                <p class="deck">Startup founders and investors are looking south, not north, as the EU market tightens.</p>
-                <p style="font-size:0.82rem; color:var(--ink2); line-height:1.6; margin-bottom:12px;">
-                  A cluster of Tunis-based software companies has pivoted toward Francophone Africa, finding greenfield demand in fintech, agritech, and logistics optimisation. Three firms closed Series A rounds this month totalling $47M.
-                </p>
-                <div class="byline">By <span>Sarra Mansouri</span> &nbsp;·&nbsp; April 7</div>
-              </article>
-
-              <article class="hero-story">
-                <div class="kicker">Cybersecurity</div>
-                <h2 style="font-size:1.25rem;">Zero-Day Brokers and the New Surveillance Economy</h2>
-                <p class="deck">A leaked tender document reveals the scale of state demand for commercial spyware.</p>
-                <p style="font-size:0.82rem; color:var(--ink2); line-height:1.6; margin-bottom:12px;">
-                  The $400M contract document, authenticated by three independent researchers, describes capabilities far beyond publicly acknowledged programmes — including AI-assisted behavioural prediction of targets.
-                </p>
-                <div class="byline">By <span>Mehdi Trabelsi</span> &nbsp;·&nbsp; April 7</div>
-              </article>
+          <!-- TECHNOLOGY -->
+          <section class="fs" id="tech">
+            <div class="shd"><h3>Technology</h3><div class="rl"></div><div class="ct">6 Stories</div></div>
+            <div class="cg">
+              <div class="card"><div class="cb"><span class="tag t-sky">AI</span></div><h4>Foundation Model Benchmarks Are Breaking Down</h4><p>Elo rankings fail to capture real capability gaps; researchers demand task-specific evaluation standards for frontier models.</p><div class="cft"><time>Apr 10</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-dim">Chips</span></div><h4>TSMC Arizona Hits N3E Yield Milestone Ahead of Schedule</h4><p>A critical benchmark for US-domestic 3nm chip supply achieved at Phoenix facility — six weeks ahead of projections.</p><div class="cft"><time>Apr 10</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-red">Cyber</span></div><h4>Only 12% of Critical Infrastructure Ready for Post-Quantum Era</h4><p>Global audit finds most operators have not begun NIST PQC implementation, leaving systems exposed to harvest-now attacks.</p><div class="cft"><time>Apr 9</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-dim">Connectivity</span></div><h4>Starlink MENA Licences Stall Over Data Sovereignty Rules</h4><p>Regulators demand local data storage and real-time traffic inspection rights as conditions of market access approval.</p><div class="cft"><time>Apr 9</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-grn">Open Source</span></div><h4>Linux Foundation Launches Trusted AI Provenance Initiative</h4><p>New supply-chain standards for open-weight models address artefact tampering and model backdoor insertion concerns.</p><div class="cft"><time>Apr 8</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-dim">Space</span></div><h4>ESA Awards €800M Copernicus Next Generation Contract</h4><p>Six new satellites will double observation capacity; open data provisions benefit member-state emergency response.</p><div class="cft"><time>Apr 8</time><a href="#">Read →</a></div></div>
             </div>
           </section>
 
-          <!-- RIGHT COLUMN -->
-          <aside class="col-right">
-            <div class="section-label"><strong>Monitor</strong> · Signals</div>
-
-            <div class="side-item">
-              <div class="side-tag"><span class="tag dark">Exclusive</span></div>
-              <h4>MENA Data Centre Capacity to Triple by 2028</h4>
-              <p>New hyperscaler commitments in Saudi Arabia, UAE, and Morocco are reshaping the region's cloud sovereignty debate.</p>
+          <!-- TUNISIA -->
+          <section class="fs" id="tunisia">
+            <div class="shd"><h3>Tunisia</h3><div class="rl"></div><div class="ct">5 Stories</div></div>
+            <div class="cg cg2">
+              <div class="card"><div class="cb"><span class="tag t-gold">Economy</span></div><h4>Sfax Industrial Zone Targets European Nearshoring Wave</h4><p>Incentive packages aim to attract manufacturers reducing Asia-Pacific exposure following 2025 tariff disruptions.</p><div class="cft"><time>Apr 10</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-sky">Education</span></div><h4>Digital Skills Programme Enrols 50,000 Youth in Phase Two</h4><p>EU and AfDB co-funded initiative focuses on cloud infrastructure and data engineering with international certifications.</p><div class="cft"><time>Apr 9</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-dim">Policy</span></div><h4>Tunisia Tables AI Liability Bill at WIPO — Diverges From EU</h4><p>Proposal places liability on deployers, not developers — a significant departure from the Brussels approach.</p><div class="cft"><time>Apr 9</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-dim">Infrastructure</span></div><h4>Tunis–Sfax Fibre Corridor to Double National Backbone Capacity</h4><p>Joint build between Tunisie Telecom and two private operators will add 400Gbps by mid-2027.</p><div class="cft"><time>Apr 8</time><a href="#">Read →</a></div></div>
             </div>
+          </section>
 
-            <div class="side-item">
-              <div class="side-tag"><span class="tag">World</span></div>
-              <h4>India-EU Digital Partnership Signed in Brussels</h4>
-              <p>The framework covers semiconductor cooperation, AI research exchange, and mutual recognition of data adequacy decisions.</p>
+          <!-- WORLD -->
+          <section class="fs" id="world">
+            <div class="shd"><h3>World</h3><div class="rl"></div><div class="ct">6 Stories</div></div>
+            <div class="cg">
+              <div class="card"><div class="cb"><span class="tag t-red">Conflict</span></div><h4>Sudan Peace Process Falters After Khartoum Airstrikes</h4><p>AU-mediated talks at acute risk following aerial bombardments of civilian infrastructure in the Omdurman district.</p><div class="cft"><time>Apr 10</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-gold">Diplomacy</span></div><h4>BRICS+ Expands Digital Currency Working Group Mandate</h4><p>mBridge CBDC framework accelerated; full operational pilot now targeting end of 2027.</p><div class="cft"><time>Apr 9</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-grn">Climate</span></div><h4>Mediterranean Drought Enters Unprecedented Third Year</h4><p>WMO confirms precipitation deficits are statistically inconsistent with pre-industrial climate variability.</p><div class="cft"><time>Apr 9</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-dim">Trade</span></div><h4>WTO Dispute Panel Rules Against US Semiconductor Subsidies</h4><p>CHIPS Act provisions challenged; Washington is expected to appeal while reviewing subsidy discipline obligations.</p><div class="cft"><time>Apr 8</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-gold">Africa</span></div><h4>AfCFTA Digital Trade Protocol Reaches Ratification Quorum</h4><p>Rwanda's deposit triggered entry into force of Africa's first binding cross-border e-commerce framework.</p><div class="cft"><time>Apr 8</time><a href="#">Read →</a></div></div>
+              <div class="card"><div class="cb"><span class="tag t-grn">Energy</span></div><h4>Morocco–Germany Green Hydrogen Corridor Secures €4.2B</h4><p>First transmediterranean hydrogen pipeline backed by European consortium, targeting 2030 first deliveries.</p><div class="cft"><time>Apr 7</time><a href="#">Read →</a></div></div>
             </div>
+          </section>
 
-            <div class="side-item">
-              <div class="side-tag"><span class="tag red">Alert</span></div>
-              <h4>Global DNS Infrastructure Under Strain</h4>
-              <p>Security researchers report a sustained reconnaissance campaign against root server operators not seen since 2016.</p>
+          <!-- DATA DESK -->
+          <section class="fs" id="data">
+            <div class="shd"><h3>Data Desk</h3><div class="rl"></div><div class="ct">Intelligence Feed</div></div>
+            <div class="dtbl-wrap">
+              <table class="dtbl" aria-label="Intelligence feed">
+                <thead><tr><th>#</th><th>Story</th><th>Category</th><th>Region</th><th>Date</th><th></th></tr></thead>
+                <tbody id="data-table">
+                  <tr><td class="idx">01</td><td><div class="st">EU AI Act Delegated Acts Published in Official Journal</div><div class="ss">EUR-Lex</div></td><td><span class="tag t-sky">Policy</span></td><td>Europe</td><td>Apr 10</td><td><a href="#" class="tlnk">Read →</a></td></tr>
+                  <tr><td class="idx">02</td><td><div class="st">Tunisia Inflation Eases to 6.2% in March 2026</div><div class="ss">INS Tunisia</div></td><td><span class="tag t-gold">Economy</span></td><td>Tunisia</td><td>Apr 9</td><td><a href="#" class="tlnk">Read →</a></td></tr>
+                  <tr><td class="idx">03</td><td><div class="st">Global Ransomware Attacks Up 41% in Q1 2026</div><div class="ss">Recorded Future</div></td><td><span class="tag t-red">Cyber</span></td><td>Global</td><td>Apr 9</td><td><a href="#" class="tlnk">Read →</a></td></tr>
+                  <tr><td class="idx">04</td><td><div class="st">African Development Bank Raises $8.2B in Bond Markets</div><div class="ss">AfDB Press</div></td><td><span class="tag t-gold">Finance</span></td><td>Africa</td><td>Apr 8</td><td><a href="#" class="tlnk">Read →</a></td></tr>
+                  <tr><td class="idx">05</td><td><div class="st">NATO Cyber Centre Publishes Tallinn Manual 3.0</div><div class="ss">CCDCOE</div></td><td><span class="tag t-dim">Defence</span></td><td>Europe</td><td>Apr 7</td><td><a href="#" class="tlnk">Read →</a></td></tr>
+                  <tr><td class="idx">06</td><td><div class="st">MENA Startup Ecosystem Report 2026 Released</div><div class="ss">Magnitt</div></td><td><span class="tag t-grn">Startups</span></td><td>MENA</td><td>Apr 6</td><td><a href="#" class="tlnk">Read →</a></td></tr>
+                </tbody>
+              </table>
             </div>
+          </section>
 
-            <div class="side-item">
-              <div class="side-tag"><span class="tag">Tunisia</span></div>
-              <h4>Carthage University Launches AI Research Hub</h4>
-              <p>A $12M joint initiative with German universities aims to produce 300 PhD-level AI researchers by 2030.</p>
-            </div>
+        </div>
 
-            <div class="side-item">
-              <div class="side-tag"><span class="tag">Economy</span></div>
-              <h4>Dinar Stabilises After Six Months of Volatility</h4>
-              <p>Currency traders cite CBT intervention and improved remittance flows from Europe as contributing factors.</p>
-            </div>
-
-            <div style="margin-top:22px; padding:16px; background:var(--paper3); border-left:3px solid var(--gold);">
-              <div class="section-label" style="border:none; padding:0; margin-bottom:10px;"><strong>This Week</strong> in Numbers</div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                <div style="text-align:center;">
-                  <div style="font-family:var(--serif); font-size:1.6rem; font-weight:900; color:var(--gold);">+34%</div>
-                  <div style="font-family:var(--mono); font-size:0.58rem; color:var(--muted); letter-spacing:.08em;">MENA TECH INVESTMENT YoY</div>
-                </div>
-                <div style="text-align:center;">
-                  <div style="font-family:var(--serif); font-size:1.6rem; font-weight:900; color:var(--red);">$220M</div>
-                  <div style="font-family:var(--mono); font-size:0.58rem; color:var(--muted); letter-spacing:.08em;">TN FINTECH FOREIGN CAPITAL</div>
-                </div>
-                <div style="text-align:center;">
-                  <div style="font-family:var(--serif); font-size:1.6rem; font-weight:900; color:var(--ink);">127</div>
-                  <div style="font-family:var(--mono); font-size:0.58rem; color:var(--muted); letter-spacing:.08em;">AI BILLS IN GLOBAL PIPELINE</div>
-                </div>
-                <div style="text-align:center;">
-                  <div style="font-family:var(--serif); font-size:1.6rem; font-weight:900; color:var(--gold);">3.1%</div>
-                  <div style="font-family:var(--mono); font-size:0.58rem; color:var(--muted); letter-spacing:.08em;">MENA GDP GROWTH FORECAST</div>
-                </div>
+        <!-- SIDEBAR -->
+        <aside class="sidebar fu d3">
+          <div class="wid">
+            <div class="wid-hd">This Week <span>in Numbers</span></div>
+            <div class="wid-bd">
+              <div class="nums">
+                <div class="nc"><div class="v" style="color:var(--sky)">+34%</div><div class="l">MENA Tech YoY</div></div>
+                <div class="nc"><div class="v" style="color:var(--red)">$220M</div><div class="l">TN Fintech Capital</div></div>
+                <div class="nc"><div class="v" style="color:var(--grn)">127</div><div class="l">AI Bills Globally</div></div>
+                <div class="nc"><div class="v" style="color:var(--gold)">3.1%</div><div class="l">MENA GDP Forecast</div></div>
               </div>
             </div>
-          </aside>
-
-        </div><!-- /front-grid -->
-
-        <!-- ── TECHNOLOGY SECTION ── -->
-        <section class="full-section" id="technology">
-          <div class="section-header">
-            <h2>Technology</h2>
-            <div class="section-rule"></div>
-            <div class="section-count">6 Stories</div>
-          </div>
-          <div class="card-grid">
-            <div class="card">
-              <div class="card-tag"><span class="tag">AI / ML</span></div>
-              <h3>Foundation Model Benchmarks Are Breaking Down</h3>
-              <p>Researchers argue that Elo-style rankings fail to capture real-world capability differentials, calling for task-specific evaluation regimes.</p>
-              <div class="card-meta"><span class="tag dark">Analysis</span><time>Apr 8</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Semiconductors</span></div>
-              <h3>TSMC Arizona Fab Hits Yield Milestone in N3E</h3>
-              <p>The Phoenix facility achieved production-grade yields on 3nm process technology, a critical benchmark for US-domestic advanced chip supply.</p>
-              <div class="card-meta"><time>Apr 8</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Cybersecurity</span></div>
-              <h3>Post-Quantum Cryptography Migration: Where Governments Stand</h3>
-              <p>A global audit finds only 12% of critical infrastructure operators have begun NIST PQC standard implementation.</p>
-              <div class="card-meta"><span class="tag dark">Report</span><time>Apr 7</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Connectivity</span></div>
-              <h3>Starlink MENA Licences Stall Over Data Sovereignty Rules</h3>
-              <p>Several North African regulators are demanding local data storage and real-time traffic inspection access as conditions of approval.</p>
-              <div class="card-meta"><time>Apr 7</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Open Source</span></div>
-              <h3>Linux Foundation Launches Trusted AI Initiative</h3>
-              <p>The initiative will establish provenance standards for open-weight models, addressing growing concerns about supply-chain attacks on model artefacts.</p>
-              <div class="card-meta"><time>Apr 6</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Space Tech</span></div>
-              <h3>ESA Awards €800M Earth Observation Contract to Consortium</h3>
-              <p>The Copernicus Next Generation programme will deploy six optical and radar satellites, with open data access for member states.</p>
-              <div class="card-meta"><time>Apr 6</time></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ── TUNISIA SECTION ── -->
-        <section class="full-section" id="tunisia">
-          <div class="section-header">
-            <h2>Tunisia</h2>
-            <div class="section-rule"></div>
-            <div class="section-count">5 Stories</div>
-          </div>
-          <div class="card-grid">
-            <div class="card">
-              <div class="card-tag"><span class="tag">Economy</span></div>
-              <h3>Sfax Industrial Zone Targets European Nearshoring Demand</h3>
-              <p>The government unveiled incentive packages aimed at attracting European manufacturers seeking to reduce Asia-Pacific supply chain exposure.</p>
-              <div class="card-meta"><time>Apr 8</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Education</span></div>
-              <h3>National Digital Skills Programme Enrols 50,000 Youth</h3>
-              <p>Phase two of the programme, co-funded by the EU and the African Development Bank, focuses on cloud infrastructure and data engineering.</p>
-              <div class="card-meta"><span class="tag dark">Development</span><time>Apr 7</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Policy</span></div>
-              <h3>Tunisia Tables Draft AI Liability Bill at WIPO Session</h3>
-              <p>The proposal would hold deployers — not developers — liable for high-risk AI decisions, diverging from the EU approach.</p>
-              <div class="card-meta"><time>Apr 7</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Infrastructure</span></div>
-              <h3>Tunis–Sfax Fibre Corridor to Add 400Gbps Capacity</h3>
-              <p>Tunisie Telecom and two private operators announced a joint build that will double national backbone bandwidth by mid-2027.</p>
-              <div class="card-meta"><time>Apr 6</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Startups</span></div>
-              <h3>IntiLAB Cohort 7 Launches with Record 42 Deeptech Startups</h3>
-              <p>The Tunis accelerator, backed by Germany's GIZ, accepted its largest cohort to date, with a majority focused on AgriTech and HealthTech.</p>
-              <div class="card-meta"><time>Apr 5</time></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ── WORLD SECTION ── -->
-        <section class="full-section" id="world">
-          <div class="section-header">
-            <h2>World</h2>
-            <div class="section-rule"></div>
-            <div class="section-count">6 Stories</div>
-          </div>
-          <div class="card-grid">
-            <div class="card">
-              <div class="card-tag"><span class="tag red">Conflict</span></div>
-              <h3>Sudan Peace Process Falters After Khartoum Airstrikes</h3>
-              <p>AU-mediated ceasefire negotiations are at risk following fresh aerial bombardments of civilian infrastructure in Omdurman.</p>
-              <div class="card-meta"><time>Apr 8</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Diplomacy</span></div>
-              <h3>BRICS+ Expands Digital Currency Working Group Mandate</h3>
-              <p>Member states agreed to accelerate the technical framework for mBridge settlement integration, aiming for a 2027 pilot.</p>
-              <div class="card-meta"><time>Apr 7</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Climate</span></div>
-              <h3>Mediterranean Drought Enters Third Consecutive Year</h3>
-              <p>WMO confirms that precipitation deficits across North Africa and southern Europe are now statistically inconsistent with pre-industrial climate variability.</p>
-              <div class="card-meta"><span class="tag dark">Report</span><time>Apr 7</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Trade</span></div>
-              <h3>WTO Dispute Panel Rules Against US Semiconductor Subsidies</h3>
-              <p>The ruling, which Washington is expected to appeal, challenged provisions of the CHIPS Act as incompatible with subsidy disciplines.</p>
-              <div class="card-meta"><time>Apr 6</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Africa</span></div>
-              <h3>AfCFTA Digital Trade Protocol Reaches Quorum for Entry into Force</h3>
-              <p>The 22nd ratification was deposited by Rwanda, triggering implementation of the continent's first binding e-commerce framework.</p>
-              <div class="card-meta"><time>Apr 6</time></div>
-            </div>
-            <div class="card">
-              <div class="card-tag"><span class="tag">Energy</span></div>
-              <h3>Hydrogen Trade Corridor Linking Morocco to Germany Secures Financing</h3>
-              <p>A €4.2B financing package was assembled by a European consortium for the first transmediterranean green hydrogen pipeline.</p>
-              <div class="card-meta"><time>Apr 5</time></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ── DATA DESK ── -->
-        <section class="full-section" id="data">
-          <div class="section-header">
-            <h2>Data Desk</h2>
-            <div class="section-rule"></div>
-            <div class="section-count">Intelligence Feed</div>
           </div>
 
-          <div class="data-table-wrap">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Story</th>
-                  <th>Category</th>
-                  <th>Region</th>
-                  <th>Date</th>
-                  <th>Source</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>01</td>
-                  <td><span class="story-title">EU AI Act Delegated Acts Published in Official Journal</span></td>
-                  <td><span class="tag">Policy</span></td>
-                  <td>Europe</td>
-                  <td>08 Apr</td>
-                  <td class="story-source">EUR-Lex</td>
-                  <td><a href="#" class="story-link">→ Read</a></td>
-                </tr>
-                <tr>
-                  <td>02</td>
-                  <td><span class="story-title">Tunisia Inflation Eases to 6.2% in March 2026</span></td>
-                  <td><span class="tag">Economy</span></td>
-                  <td>Tunisia</td>
-                  <td>07 Apr</td>
-                  <td class="story-source">INS Tunisia</td>
-                  <td><a href="#" class="story-link">→ Read</a></td>
-                </tr>
-                <tr>
-                  <td>03</td>
-                  <td><span class="story-title">Global Ransomware Attacks Up 41% in Q1 2026</span></td>
-                  <td><span class="tag red">Cyber</span></td>
-                  <td>Global</td>
-                  <td>07 Apr</td>
-                  <td class="story-source">Recorded Future</td>
-                  <td><a href="#" class="story-link">→ Read</a></td>
-                </tr>
-                <tr>
-                  <td>04</td>
-                  <td><span class="story-title">African Development Bank Raises $8.2B in Bond Market</span></td>
-                  <td><span class="tag">Finance</span></td>
-                  <td>Africa</td>
-                  <td>06 Apr</td>
-                  <td class="story-source">AfDB Press</td>
-                  <td><a href="#" class="story-link">→ Read</a></td>
-                </tr>
-                <tr>
-                  <td>05</td>
-                  <td><span class="story-title">NATO Cyber Centre Publishes Tallinn Manual 3.0</span></td>
-                  <td><span class="tag">Defence</span></td>
-                  <td>Europe</td>
-                  <td>05 Apr</td>
-                  <td class="story-source">CCDCOE</td>
-                  <td><a href="#" class="story-link">→ Read</a></td>
-                </tr>
-                <tr>
-                  <td>06</td>
-                  <td><span class="story-title">MENA Startup Ecosystem Report 2026 Released</span></td>
-                  <td><span class="tag">Startups</span></td>
-                  <td>MENA</td>
-                  <td>04 Apr</td>
-                  <td class="story-source">Magnitt</td>
-                  <td><a href="#" class="story-link">→ Read</a></td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="wid">
+            <div class="wid-hd">Trending <span>Now</span></div>
+            <div class="wid-bd" style="padding:8px 16px 12px">
+              <div class="trnd-item"><div class="tr">1</div><div class="tt">EU AI Act compliance scramble across European tech sector</div></div>
+              <div class="trnd-item"><div class="tr">2</div><div class="tt">G7 bond emergency and what it means for MENA debt</div></div>
+              <div class="trnd-item"><div class="tr">3</div><div class="tt">Tunisia fintech — the $220M foreign capital wave</div></div>
+              <div class="trnd-item"><div class="tr">4</div><div class="tt">Post-quantum countdown governments are ignoring</div></div>
+              <div class="trnd-item"><div class="tr">5</div><div class="tt">Morocco hydrogen corridor — North Africa's energy pivot</div></div>
+            </div>
           </div>
-        </section>
 
-      </div><!-- /container -->
-    </div><!-- /page-body -->
-  </main>
+          <div class="wid opin-wid" style="overflow:visible">
+            <div class="opin">
+              <blockquote>Digital sovereignty is not a luxury — it is the foundation of strategic autonomy in the 21st century information order.</blockquote>
+              <cite>— ANN Editorial Board, April 2026</cite>
+            </div>
+          </div>
 
-  <!-- ─── FOOTER ─── -->
-  <footer>
-    <div class="container">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <h2>ANN Intelligence Feed</h2>
-          <p>Independent strategic monitoring covering technology, geopolitics, and economic affairs across the MENA region and the world. Published from Tunis.</p>
+          <div class="nl-box">
+            <div class="nl-title">Daily Briefing</div>
+            <p class="nl-desc">Five stories that matter, every morning at 07:00 CET. Free, always.</p>
+            <input class="nl-inp" type="email" placeholder="your@email.com"/>
+            <button class="nl-btn" id="nl-btn">Subscribe Free</button>
+          </div>
+        </aside>
+      </div>
+
+    </div>
+  </div>
+</div><!-- /news panel -->
+
+
+<!-- ══════════════════════════════════════
+     PERSPECTIVES PANEL
+══════════════════════════════════════ -->
+<div class="panel" id="tab-perspectives">
+  <div class="page-body">
+    <div class="wrap">
+
+      <!-- PERSPECTIVES INTRO -->
+      <div class="persp-intro fu">
+        <div class="pi-left">
+          <div class="pi-label">A New Form of Authorship</div>
+          <h2>What is Perspectives?</h2>
+          <p>
+            Perspectives is a space for long-form articles that don't come from a single author working alone — and don't come from an AI working unsupervised either.
+            Every piece here is the product of a <strong>collaboration between a human and an AI writing model</strong>.
+          </p>
+          <p>
+            A human contributor — a reader, a thinker, a journalist, or anyone with a question worth exploring — writes a <strong>prompt</strong>: a few lines describing what they want said, what angle to take, what tone to strike.
+            An AI model (Claude, GPT-4o, Mistral, or others) then writes the full article from that brief.
+          </p>
+          <p>
+            The result is published with a <strong>dual byline</strong> that credits both:
+            the AI that wrote it, and the human whose curiosity sparked it.
+            Neither ghost-writing nor pure automation — something new.
+          </p>
+          <!-- Byline formula -->
+          <div class="byline-formula">
+            <span class="bf-part ai">AI writes the article</span>
+            <span class="bf-op">+</span>
+            <span class="bf-part human">Human writes the prompt</span>
+            <span class="bf-op">=</span>
+            <span class="bf-part result">A new kind of authorship</span>
+          </div>
         </div>
-        <div class="footer-col">
-          <h4>Sections</h4>
-          <a href="#technology">Technology</a>
-          <a href="#tunisia">Tunisia</a>
-          <a href="#world">World</a>
-          <a href="#economy">Economy</a>
-          <a href="#data">Data Desk</a>
-        </div>
-        <div class="footer-col">
-          <h4>About</h4>
-          <a href="#">Editorial Charter</a>
-          <a href="#">Masthead</a>
-          <a href="#">Contact</a>
-          <a href="#">Privacy Policy</a>
-        </div>
-        <div class="footer-col">
-          <h4>Follow</h4>
-          <a href="#">Twitter / X</a>
-          <a href="#">LinkedIn</a>
-          <a href="#">RSS Feed</a>
-          <a href="#">Newsletter</a>
+
+        <div class="pi-concept">
+          <div class="pi-step">
+            <div class="pi-step-num">1</div>
+            <div class="pi-step-txt"><strong>A human has an idea.</strong> It could be a question, an argument, a topic they wish someone would explore — anything worth a full article.</div>
+          </div>
+          <div class="pi-step">
+            <div class="pi-step-num">2</div>
+            <div class="pi-step-txt"><strong>They write a prompt.</strong> A few sentences — or paragraphs — describing the angle, tone, and what the article should cover. This is their editorial contribution.</div>
+          </div>
+          <div class="pi-step">
+            <div class="pi-step-num">3</div>
+            <div class="pi-step-txt"><strong>An AI writes the article.</strong> Claude, GPT-4o, Mistral, or whichever model they choose takes that prompt and produces a complete, structured piece.</div>
+          </div>
+          <div class="pi-step">
+            <div class="pi-step-num">4</div>
+            <div class="pi-step-txt"><strong>Both are credited.</strong> The published byline reads: <em>"Written by Claude (Anthropic), prompted by Ala Nijaoui."</em> The human's name is the editorial vision. The AI's name is the instrument.</div>
+          </div>
         </div>
       </div>
-      <div class="footer-bottom">
-        <span>© 2026 ANN Intelligence Feed</span>
-        <span>All editorial content is © ANN. Reproduction requires written permission.</span>
-        <span>Built for <span>GitHub Pages</span></span>
+
+      <!-- TOPIC FILTER -->
+      <div class="topic-filter fu d1">
+        <button class="tf-btn active">All Topics</button>
+        <button class="tf-btn">Technology</button>
+        <button class="tf-btn">Geopolitics</button>
+        <button class="tf-btn">Economy</button>
+        <button class="tf-btn">Society</button>
+        <button class="tf-btn">Tunisia</button>
+        <button class="tf-btn">Culture</button>
+      </div>
+
+      <!-- FEATURED ARTICLE -->
+      <div class="art-grid art-grid-full fu d1" style="margin-bottom:1px">
+        <article class="art-card featured">
+          <div class="art-label">Featured · Geopolitics</div>
+          <h3>The Sovereignty Paradox: Why Nations Fear the Technology They Need Most</h3>
+          <p class="art-excerpt">
+            In the space of eighteen months, "digital sovereignty" has moved from a niche bureaucratic term to a central axis of foreign policy debate.
+            Yet the countries most vocal about controlling their technological destiny — France, India, Brazil, Tunisia — remain deeply dependent on the very infrastructure, platforms, and models they seek to regulate.
+            This piece explores the paradox: that in trying to assert sovereignty over technology, nations risk slowing the very adoption that would give them the leverage they seek.
+            The answer may lie not in isolation, but in strategic interdependence — choosing which dependencies to accept, and which to resist.
+          </p>
+          <a href="#" class="btn-gold">Read Full Article <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <div class="byline-block" style="margin-top:20px">
+            <div class="by-ava">C</div>
+            <div class="by-text">
+              <div class="by-written">Written by <em>Claude (Anthropic)</em></div>
+              <div class="by-sep">· prompted by ·</div>
+              <div class="by-prompted"><em>Ala Nijaoui</em></div>
+            </div>
+            <div class="by-date">Apr 9, 2026</div>
+          </div>
+        </article>
+      </div>
+
+      <!-- ARTICLE GRID -->
+      <div class="art-grid fu d2" style="margin-bottom:1px">
+        <article class="art-card">
+          <div class="art-label">Technology</div>
+          <h3>What Happens When Every Country Has Its Own AI?</h3>
+          <p class="art-excerpt">The proliferation of national AI models raises a question not about capability but about fragmentation. What does a world of incompatible AI ecosystems look like, and who actually benefits from that divergence?</p>
+          <div class="byline-block">
+            <div class="by-ava" style="background:var(--sky)">G</div>
+            <div class="by-text">
+              <div class="by-written">Written by <em>GPT-4o (OpenAI)</em></div>
+              <div class="by-sep">· prompted by ·</div>
+              <div class="by-prompted"><em>Yasmine Khelifi</em></div>
+            </div>
+            <div class="by-date">Apr 7</div>
+          </div>
+        </article>
+        <article class="art-card">
+          <div class="art-label">Economy · Tunisia</div>
+          <h3>Tunisia at the Crossroads: Africa or Europe?</h3>
+          <p class="art-excerpt">For decades, Tunisia's economic gravity pointed north. A new generation of entrepreneurs and investors is asking whether south isn't the more promising direction — and what it would actually take to pivot.</p>
+          <div class="byline-block">
+            <div class="by-ava">C</div>
+            <div class="by-text">
+              <div class="by-written">Written by <em>Claude (Anthropic)</em></div>
+              <div class="by-sep">· prompted by ·</div>
+              <div class="by-prompted"><em>Ala Nijaoui</em></div>
+            </div>
+            <div class="by-date">Apr 5</div>
+          </div>
+        </article>
+        <article class="art-card">
+          <div class="art-label">Society</div>
+          <h3>The Loneliness Algorithm: Social Media Designed to Isolate</h3>
+          <p class="art-excerpt">A growing body of research suggests that engagement-optimised feeds don't connect us — they compare us. This piece examines the architectural choices that turned connection into competition.</p>
+          <div class="byline-block">
+            <div class="by-ava">C</div>
+            <div class="by-text">
+              <div class="by-written">Written by <em>Claude (Anthropic)</em></div>
+              <div class="by-sep">· prompted by ·</div>
+              <div class="by-prompted"><em>Mehdi Trabelsi</em></div>
+            </div>
+            <div class="by-date">Apr 3</div>
+          </div>
+        </article>
+        <article class="art-card">
+          <div class="art-label">Geopolitics</div>
+          <h3>Why the Sahel Is the 21st Century's Most Important Region</h3>
+          <p class="art-excerpt">Mineral wealth, demographic youth, climate vulnerability, and great-power competition — the Sahel has become the arena where the contradictions of the new world order are most legible and most urgent.</p>
+          <div class="byline-block">
+            <div class="by-ava" style="background:var(--sky)">G</div>
+            <div class="by-text">
+              <div class="by-written">Written by <em>GPT-4o (OpenAI)</em></div>
+              <div class="by-sep">· prompted by ·</div>
+              <div class="by-prompted"><em>Sarra Mansouri</em></div>
+            </div>
+            <div class="by-date">Apr 1</div>
+          </div>
+        </article>
+      </div>
+
+      <!-- SUBMIT CTA -->
+      <div class="submit-cta fu d3">
+        <div>
+          <h3>Submit Your <span>Perspective</span></h3>
+          <p>Have a question or angle you want explored? Write us a prompt — a few sentences describing what you'd like the article to cover and the tone you'd want. If selected, we'll write it with an AI model of your choice and publish it under your name as the prompt author.</p>
+        </div>
+        <button class="sub-btn" onclick="window.location='mailto:perspectives@annfeed.com?subject=Perspective Submission'">
+          Submit a Prompt →
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div><!-- /perspectives panel -->
+
+
+<!-- ── FOOTER ── -->
+<footer role="contentinfo">
+  <div class="wrap">
+    <div class="ftg">
+      <div>
+        <div class="ft-name">ANN <span>Feed</span></div>
+        <div class="ft-sub">Global News Intelligence · Est. 2024</div>
+        <p class="ft-desc">AI-curated global news and human-prompted perspectives. Sourced from official outlets, written with integrity, published from Tunis — read globally.</p>
+        <div class="socials">
+          <a href="#" class="sbtn">Twitter / X</a>
+          <a href="#" class="sbtn">LinkedIn</a>
+          <a href="#" class="sbtn">RSS</a>
+          <a href="#" class="sbtn">Telegram</a>
+        </div>
+      </div>
+      <div class="ftcol">
+        <h4>News Feed</h4>
+        <a href="#front">Front Page</a>
+        <a href="#tech">Technology</a>
+        <a href="#tunisia">Tunisia</a>
+        <a href="#world">World</a>
+        <a href="#data">Data Desk</a>
+      </div>
+      <div class="ftcol">
+        <h4>Perspectives</h4>
+        <a href="#" data-tab-link="perspectives">All Articles</a>
+        <a href="#" data-tab-link="perspectives">How It Works</a>
+        <a href="mailto:perspectives@annfeed.com">Submit a Prompt</a>
+      </div>
+      <div class="ftcol">
+        <h4>About</h4>
+        <a href="#">AI Methodology</a>
+        <a href="#">Editorial Charter</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact</a>
       </div>
     </div>
-  </footer>
+    <div class="ft-bot">
+      <span>© 2026 ANN Feed. All rights reserved.</span>
+      <span>Hosted on <a href="https://pages.github.com" target="_blank" rel="noopener">GitHub Pages</a> · Moving to <a href="#">annfeed.com</a></span>
+    </div>
+  </div>
+</footer>
 
-  <script>
-    // Live date
-    const d = new Date();
-    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const el = document.getElementById('today-date');
-    if (el) el.textContent = `${days[d.getDay()].toUpperCase()} · ${months[d.getMonth()].toUpperCase()} ${d.getDate()}, ${d.getFullYear()}`;
+<script>
+// ── Live date ──
+const d = new Date();
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const el = document.getElementById('today-date');
+if(el) el.textContent = `${DAYS[d.getDay()].toUpperCase()} · ${MONTHS[d.getMonth()].toUpperCase()} ${d.getDate()}, ${d.getFullYear()}`;
 
-    // Active nav on scroll
-    const sections = document.querySelectorAll('section[id], main[id]');
-    const navLinks = document.querySelectorAll('.primary-nav a');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          navLinks.forEach(a => {
-            a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
-          });
-        }
-      });
-    }, { threshold: 0.35 });
-    sections.forEach(s => observer.observe(s));
+// Last updated
+const lu = document.getElementById('last-updated');
+if(lu){
+  const now = new Date();
+  lu.textContent = `Last update: ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+}
 
-    // Pause ticker on hover
-    const track = document.querySelector('.ticker-track');
-    if (track) {
-      track.addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
-      track.addEventListener('mouseleave', () => track.style.animationPlayState = 'running');
+// ── Tab switching ──
+const tabs = document.querySelectorAll('.tab-btn');
+const panels = document.querySelectorAll('.panel');
+tabs.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabs.forEach(b => b.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const panel = document.getElementById('tab-' + btn.dataset.tab);
+    if(panel) panel.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+// Footer tab links
+document.querySelectorAll('[data-tab-link]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = a.dataset.tabLink;
+    tabs.forEach(b => { if(b.dataset.tab === target) b.click(); });
+  });
+});
+
+// ── Topic filter ──
+document.querySelectorAll('.tf-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// ── Newsletter ──
+const nlBtn = document.getElementById('nl-btn');
+if(nlBtn){
+  nlBtn.addEventListener('click', () => {
+    nlBtn.textContent = '✓ You\'re in!';
+    nlBtn.style.background = 'var(--grn)';
+    setTimeout(() => { nlBtn.textContent = 'Subscribe Free'; nlBtn.style.background = 'var(--ink)'; }, 2800);
+  });
+}
+
+// ── Nav active on scroll ──
+const secs = document.querySelectorAll('[id]');
+const navAs = document.querySelectorAll('.pnav-row a');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting)
+      navAs.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+  });
+}, { threshold: 0.3, rootMargin: '-80px 0px -40% 0px' });
+secs.forEach(s => io.observe(s));
+
+// ── Load news.json (from AI agent) ──
+async function loadNews(){
+  try {
+    const res = await fetch('news.json?t=' + Date.now());
+    if(!res.ok) return;
+    const data = await res.json();
+    if(!data || !data.articles) return;
+
+    const list = document.getElementById('news-briefs');
+    if(list && data.articles.length > 0){
+      list.innerHTML = data.articles.slice(0, 8).map((a, i) => `
+        <li class="bi">
+          <div class="bn">${String(i+1).padStart(2,'0')}</div>
+          <div class="bb">
+            <h5>${a.title}</h5>
+            <p>${a.brief}</p>
+          </div>
+          <time class="bt">${a.time || ''}</time>
+        </li>
+      `).join('');
     }
-  </script>
+
+    const cnt = document.getElementById('brief-count');
+    if(cnt && data.updated) cnt.textContent = 'Updated ' + data.updated;
+
+    const lu2 = document.getElementById('last-updated');
+    if(lu2 && data.updated) lu2.textContent = 'Last update: ' + data.updated;
+
+    const tbl = document.getElementById('data-table');
+    if(tbl && data.articles.length > 0){
+      tbl.innerHTML = data.articles.slice(0, 8).map((a, i) => `
+        <tr>
+          <td class="idx">${String(i+1).padStart(2,'0')}</td>
+          <td><div class="st">${a.title}</div><div class="ss">${a.source || ''}</div></td>
+          <td><span class="tag t-dim">${a.category || 'News'}</span></td>
+          <td>${a.region || 'Global'}</td>
+          <td>${a.date || ''}</td>
+          <td><a href="${a.url || '#'}" class="tlnk" target="_blank" rel="noopener">Read →</a></td>
+        </tr>
+      `).join('');
+    }
+  } catch(e) { /* silently keep static content */ }
+}
+loadNews();
+setInterval(loadNews, 15 * 60 * 1000);
+</script>
 </body>
 </html>

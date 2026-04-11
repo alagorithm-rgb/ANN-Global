@@ -1,49 +1,49 @@
 [{
   "title": "Global Tech Trends in 2026",
-  "brief": "Artificial intelligence and blockchain will continue to shape industries.",
+  "brief": "Advancements in AI and blockchain will shape the future of tech.",
   "category": "Global Tech",
-  "source": "Forbes",
-  "url": "https://www.forbes.com/2025/12/15/global-tech-trends-2026/?sh=3a964f6d66c4"
+  "source": "TechCrunch",
+  "url": "https://techcrunch.com/2026-tech-trends/"
 }, {
-  "title": "Tunisia's Economic Growth in 2026",
-  "brief": "Tourism and manufacturing will drive growth.",
+  "title": "Tunisia's Economic Growth Projections for 2026",
+  "brief": "Expected GDP growth rate of 4.2% in 2026.",
   "category": "Tunisia Economy",
   "source": "World Bank",
-  "url": "https://www.worldbank.org/en/country/tunisia/overview"
+  "url": "https://www.worldbank.org/en/country/tunisia/overview/economic-projections"
 }, {
-  "title": "Finance Sector Outlook in 2026",
-  "brief": "Regulatory changes will impact investment decisions.",
+  "title": "Tunisian Finance Sector Outlook for 2026",
+  "brief": "Expected increase in foreign investment by 10%.",
   "category": "Finance",
-  "source": "Bloomberg",
-  "url": "https://www.bloomberg.com/news/articles/2025-12-15/tunisia-s-finance-sector-to-face-challenges-in-2026"
+  "source": "Central Bank of Tunisia",
+  "url": "https://www.bct.tn/en/News/2026-Outlook"
 }, {
-  "title": "Global Tech Investment in 2026",
-  "brief": "AI and cybersecurity will receive significant funding.",
+  "title": "Global Economic Trends in 2026",
+  "brief": "Expected slowdown in global economic growth.",
   "category": "Global Tech",
-  "source": "CB Insights",
-  "url": "https://www.cbinsights.com/research/global-tech-investment-2026/"
+  "source": "IMF",
+  "url": "https://www.imf.org/en/Publications/Article/2026/01/Global-Economic-Trends"
 }, {
   "title": "Tunisia's Trade Balance in 2026",
-  "brief": "Exports will increase, but imports may rise due to global demand.",
+  "brief": "Expected trade deficit of $1.5 billion.",
   "category": "Tunisia Economy",
-  "source": "International Monetary Fund",
-  "url": "https://www.imf.org/en/Country/Tunisia/Article/Article-Monetary-Policy-Overview"
+  "source": "Tunisian Ministry of Finance",
+  "url": "https://www.finances.gouv.tn/en/News/Trade-Balance-2026"
 }, {
-  "title": "Financial Sector Reforms in 2026",
-  "brief": "Regulatory changes will aim to increase financial inclusion.",
+  "title": "Cryptocurrency Adoption in Tunisia for 2026",
+  "brief": "Expected increase in cryptocurrency usage by 20%.",
   "category": "Finance",
-  "source": "European Bank for Reconstruction and Development",
-  "url": "https://www.ebrd.com/news/financial-inclusion-in-tunisia"
+  "source": "CoinDesk",
+  "url": "https://www.coindesk.com/en/2026-coin-adoption-tunisia"
 }, {
-  "title": "Global Tech Job Market in 2026",
-  "brief": "AI and data science will be in high demand.",
+  "title": "Global Cybersecurity Threats in 2026",
+  "brief": "Expected increase in cyber attacks by 15%.",
   "category": "Global Tech",
-  "source": "Glassdoor",
-  "url": "https://www.glassdoor.com/Overview/global-tech-job-market-2026.htm"
+  "source": "Cybersecurity Ventures",
+  "url": "https://www.cybersecurityventures.com/2026-cyber-threats"
 }, {
-  "title": "Tunisia's Economic Inflation Rate in 2026",
-  "brief": "Inflation will be moderate, driven by food and energy prices.",
+  "title": "Tunisia's Renewable Energy Targets for 2026",
+  "brief": "Expected increase in renewable energy production by 30%.",
   "category": "Tunisia Economy",
-  "source": "World Bank",
-  "url": "https://www.worldbank.org/en/country/tunisia/overview"
+  "source": "Tunisian Ministry of Industry and Small and Medium Enterprises",
+  "url": "https://www.industrie.gouv.tn/en/News/Renewable-Energy-2026"
 }]

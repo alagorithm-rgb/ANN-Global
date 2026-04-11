@@ -1,83 +1,833 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANN Feed | AI News Intelligence</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Libre+Franklin:wght@300;400;600;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Libre+Franklin', sans-serif; background-color: #f4f1ea; color: #1a1a1a; }
-        .serif { font-family: 'Playfair Display', serif; }
-        .newspaper-border { border: 1px solid #2a2a2a; }
-        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-    </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ANN Feed — Global News Intelligence</title>
+  <meta name="description" content="ANN Feed — AI-curated global news and human-prompted perspectives. Updated multiple times daily."/>
+  <!-- No-cache headers so GitHub Pages always serves the latest news.json -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,600;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+  /* ═══════════════════════════════════════
+     DESIGN TOKENS
+  ═══════════════════════════════════════ */
+  :root{
+    --paper:#f5f0e8; --paper2:#ede8dc; --paper3:#e4ddd0; --paper4:#ddd5c5;
+    --ink:#111; --ink2:#222; --ink3:#444; --muted:#6b6459;
+    --rule:#c8bfaf; --rule2:#b8ae9e; --white:#fdfaf5;
+    --gold:#b8860b; --gold2:#d4a017;
+    --red:#b91c1c; --red2:#dc2626;
+    --sky:#1d6fa4; --grn:#1a7a4a;
+    --persp:#6b3d8a;
+    --serif:'Playfair Display',Georgia,serif;
+    --body:'Source Serif 4',Georgia,serif;
+    --mono:'DM Mono','Courier New',monospace;
+    --r:3px; --r2:6px; --r3:10px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+
+  /* grain */
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.028'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.6}
+
+  .wrap{max-width:1260px;margin:0 auto;padding:0 24px}
+
+  /* ── TAGS ── */
+  .tag{display:inline-flex;align-items:center;font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:2px;border:1px solid currentColor}
+  .t-gold{color:var(--gold);border-color:rgba(184,134,11,.4);background:rgba(184,134,11,.07)}
+  .t-red{color:var(--red);border-color:rgba(185,28,28,.35);background:rgba(185,28,28,.06)}
+  .t-sky{color:var(--sky);border-color:rgba(29,111,164,.35);background:rgba(29,111,164,.06)}
+  .t-grn{color:var(--grn);border-color:rgba(26,122,74,.35);background:rgba(26,122,74,.06)}
+  .t-dim{color:var(--muted);border-color:var(--rule);background:var(--paper2)}
+  .t-persp{color:var(--persp);border-color:rgba(107,61,138,.35);background:rgba(107,61,138,.07)}
+  .live-dot{width:6px;height:6px;border-radius:50%;background:var(--red2);animation:blink 1.2s ease-in-out infinite;display:inline-block}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+
+  /* ── TICKER ── */
+  .ticker{background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.07em;padding:7px 0;overflow:hidden;border-bottom:2px solid var(--gold)}
+  .tick-row{display:flex;align-items:center}
+  .tick-lbl{flex-shrink:0;background:var(--gold);color:var(--ink);padding:0 16px;height:22px;display:flex;align-items:center;margin-right:20px;font-size:10px;letter-spacing:.18em;font-weight:500}
+  .tick-track{display:flex;white-space:nowrap;animation:ticksc 70s linear infinite}
+  .tick-track:hover{animation-play-state:paused}
+  .tick-track span{padding-right:60px;opacity:.8}
+  .tick-track span::before{content:'◆  ';color:var(--gold);opacity:.7}
+  @keyframes ticksc{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ── MASTHEAD ── */
+  .masthead{background:var(--white);border-bottom:3px double var(--ink)}
+  .mast-inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:flex-end;padding:22px 24px 18px;max-width:1260px;margin:0 auto;border-bottom:1px solid var(--ink)}
+  .mast-left{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em}
+  .mast-left .date-line{font-size:11px;color:var(--ink3);margin-bottom:3px}
+  .mast-center{text-align:center;padding:0 20px}
+  .site-name{font-family:var(--serif);font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--ink)}
+  .site-name span{color:var(--gold)}
+  .site-tagline{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-top:5px}
+  .mast-right{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;text-align:right}
+  .mast-right .edition{font-size:11px;color:var(--ink3);margin-bottom:3px}
+  .hdr-actions{display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:8px 24px;max-width:1260px;margin:0 auto}
+  .hbtn{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:var(--r);cursor:pointer;border:none}
+  .hbtn-g{background:transparent;color:var(--muted);border:1px solid var(--rule2)!important}
+  .hbtn-s{background:var(--ink);color:var(--paper)}
+
+  /* ── NAV ── */
+  .pnav{background:var(--white);border-bottom:1px solid var(--rule)}
+  .pnav-row{display:flex;align-items:center;max-width:1260px;margin:0 auto;padding:0 24px;overflow-x:auto;scrollbar-width:none}
+  .pnav-row::-webkit-scrollbar{display:none}
+  .pnav-row a{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);padding:11px 18px;white-space:nowrap;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
+  .pnav-row a:hover{color:var(--ink)}
+  .pnav-row a.active{color:var(--gold);border-bottom-color:var(--gold)}
+  .pnav-sep{color:var(--rule2);padding:0 2px}
+
+  /* ── TAB BAR ── */
+  .tab-bar{background:var(--paper2);border-bottom:2px solid var(--ink);position:sticky;top:0;z-index:200}
+  .tab-row{display:flex;max-width:1260px;margin:0 auto;padding:0 24px;overflow-x:auto;scrollbar-width:none}
+  .tab-row::-webkit-scrollbar{display:none}
+  .tab-btn{font-family:var(--serif);font-size:14px;font-weight:700;letter-spacing:-.01em;color:var(--muted);padding:13px 22px;white-space:nowrap;cursor:pointer;background:none;border:none;border-bottom:3px solid transparent;transition:color .2s}
+  .tab-btn:hover{color:var(--ink)}
+  .tab-btn.active{color:var(--ink);border-bottom-color:var(--ink)}
+  .tab-btn.persp-tab.active{color:var(--persp);border-bottom-color:var(--persp)}
+  .tab-badge{display:inline-flex;font-family:var(--mono);font-size:8px;font-weight:500;letter-spacing:.1em;padding:1px 5px;border-radius:2px;margin-left:6px;position:relative;top:-1px}
+  .news-badge{background:rgba(185,28,28,.12);color:var(--red)}
+  .persp-badge{background:rgba(107,61,138,.12);color:var(--persp)}
+
+  /* ── PANELS ── */
+  .panel{display:none}
+  .panel.active{display:block}
+  .page-body{padding:0 0 80px}
+
+  /* ── LOADING / ERROR ── */
+  .loading-state{text-align:center;padding:70px 20px;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.12em}
+  .spinner{width:22px;height:22px;border:2px solid var(--rule);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .error-state{background:rgba(185,28,28,.05);border:1px solid rgba(185,28,28,.2);border-radius:var(--r2);padding:22px 24px;margin:24px 0;font-family:var(--mono);font-size:11px;color:var(--red);line-height:1.8}
+  .error-state code{background:rgba(185,28,28,.08);padding:1px 5px;border-radius:2px}
+
+  /* ── AI STATUS BAR ── */
+  .ai-status{display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--paper2);border:1px solid var(--rule);border-radius:var(--r2);margin-bottom:18px;font-family:var(--mono);font-size:10px;color:var(--muted)}
+  .ai-pulse{width:8px;height:8px;border-radius:50%;background:var(--grn);flex-shrink:0;box-shadow:0 0 0 0 rgba(26,122,74,.4);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(26,122,74,.4)}70%{box-shadow:0 0 0 7px rgba(26,122,74,0)}100%{box-shadow:0 0 0 0 rgba(26,122,74,0)}}
+  .ai-status strong{color:var(--grn);font-weight:500}
+  .ai-upd{margin-left:auto}
+
+  /* ── INTRO BOX ── */
+  .intro-box{background:var(--paper2);border:1px solid var(--rule);border-top:3px solid var(--ink);border-radius:0 0 var(--r3) var(--r3);padding:22px 26px;margin-bottom:28px}
+  .intro-box .ib-label{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .intro-box h2{font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:8px}
+  .intro-box p{font-family:var(--body);font-size:.86rem;font-weight:300;color:var(--ink3);line-height:1.7}
+  .intro-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .ipill{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--rule2);color:var(--muted);background:var(--white)}
+
+  /* ── HERO GRID ── */
+  .hero-grid{display:grid;grid-template-columns:1fr 340px;grid-template-rows:1fr 1fr;gap:0;border:1px solid var(--rule);background:var(--rule);border-radius:var(--r3);overflow:hidden;margin-bottom:36px}
+  .hero-main{grid-column:1;grid-row:1/3;background:var(--white);padding:38px;display:flex;flex-direction:column;justify-content:flex-end;min-height:440px;position:relative;overflow:hidden}
+  .hero-main::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(184,134,11,.03) 0%,transparent 50%);pointer-events:none}
+  .h-num{position:absolute;top:22px;right:32px;font-family:var(--serif);font-size:7rem;font-weight:900;color:rgba(0,0,0,.03);line-height:1;user-select:none}
+  .h-kicker{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .h-kicker::before{content:'';width:24px;height:2px;background:var(--red);flex-shrink:0}
+  .hero-main h1{font-family:var(--serif);font-size:clamp(1.7rem,2.8vw,2.7rem);font-weight:900;line-height:1.12;letter-spacing:-.02em;color:var(--ink);margin-bottom:14px}
+  .h-deck{font-family:var(--body);font-size:.96rem;font-weight:300;font-style:italic;color:var(--ink3);border-left:3px solid var(--gold);padding-left:14px;line-height:1.65;margin-bottom:20px}
+  .h-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .h-by{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.06em}
+  .h-by strong{color:var(--gold)}
+  .btn-read{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);padding:7px 16px;border:1px solid var(--ink);border-radius:var(--r);transition:background .2s,color .2s;margin-left:auto}
+  .btn-read:hover{background:var(--ink);color:var(--paper)}
+  .hero-side{background:var(--paper2);padding:24px;display:flex;flex-direction:column;justify-content:space-between}
+  .hero-side+.hero-side{border-top:1px solid var(--rule)}
+  .hero-side h2{font-family:var(--serif);font-size:1rem;font-weight:700;line-height:1.3;color:var(--ink);margin:8px 0 7px}
+  .hero-side p{font-family:var(--body);font-size:13px;font-weight:300;color:var(--ink3);line-height:1.5}
+  .sfoot{display:flex;align-items:center;justify-content:space-between;margin-top:13px}
+  .sfoot time{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.07em}
+  .arr{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;color:var(--gold);text-transform:uppercase}
+
+  /* ── TWO-COL LAYOUT ── */
+  .two-col{display:grid;grid-template-columns:1fr 310px;gap:32px;align-items:start}
+
+  /* ── SECTION HEADER ── */
+  .shd{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid var(--ink)}
+  .shd h3{font-family:var(--serif);font-size:1.2rem;font-weight:900;color:var(--ink)}
+  .shd .rl{flex:1;height:1px;background:var(--rule)}
+  .shd .ct{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em}
+
+  /* ── CARD GRID ── */
+  .cg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:var(--r2);overflow:hidden}
+  .cg2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--white);padding:20px;display:flex;flex-direction:column;transition:background .18s;cursor:pointer}
+  .card:hover{background:var(--paper2)}
+  .card .cb{margin-bottom:10px}
+  .card h4{font-family:var(--serif);font-size:.95rem;font-weight:700;line-height:1.3;color:var(--ink);margin-bottom:7px;flex:1}
+  .card p{font-family:var(--body);font-size:.79rem;font-weight:300;color:var(--ink3);line-height:1.55;margin-bottom:12px}
+  .cft{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--rule);padding-top:10px;margin-top:auto}
+  .cft time{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.06em}
+  .cft a{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;color:var(--gold);text-transform:uppercase}
+
+  /* ── BRIEF LIST ── */
+  .blist{list-style:none}
+  .bi{display:grid;grid-template-columns:26px 1fr auto;gap:11px;align-items:start;padding:14px 0;border-bottom:1px solid var(--rule)}
+  .bi:last-child{border-bottom:none}
+  .bn{font-family:var(--serif);font-size:1.4rem;font-weight:900;color:var(--rule2);line-height:1;padding-top:2px}
+  .bb h5{font-family:var(--serif);font-size:.9rem;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:3px}
+  .bb h5 a{transition:color .15s}
+  .bb h5 a:hover{color:var(--gold)}
+  .bb p{font-family:var(--body);font-size:.77rem;font-weight:300;color:var(--ink3);line-height:1.45}
+  .bt{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.08em;white-space:nowrap;padding-top:3px}
+
+  /* ── FULL SECTION ── */
+  .fs{padding:32px 0;border-top:1px solid var(--rule)}
+
+  /* ── SIDEBAR ── */
+  .sidebar{display:flex;flex-direction:column;gap:20px}
+  .wid{background:var(--white);border:1px solid var(--rule);border-radius:var(--r2);overflow:hidden}
+  .wid-hd{background:var(--ink);padding:10px 16px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--paper)}
+  .wid-hd span{color:var(--gold)}
+  .wid-bd{padding:14px 16px}
+  .trnd-item{display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:start;padding:9px 0;border-bottom:1px solid var(--rule);cursor:pointer}
+  .trnd-item:last-child{border-bottom:none;padding-bottom:0}
+  .trnd-item:hover .tt{color:var(--gold)}
+  .tr{font-family:var(--serif);font-size:1rem;font-weight:900;color:var(--rule2);line-height:1;padding-top:2px}
+  .tt{font-family:var(--body);font-size:.81rem;color:var(--ink3);line-height:1.3;transition:color .15s}
+  .opin{background:var(--ink);color:var(--paper);padding:20px 18px;position:relative}
+  .opin::before{content:'\201C';font-family:var(--serif);font-size:5rem;color:var(--gold);position:absolute;top:-16px;left:12px;line-height:1}
+  .opin blockquote{font-family:var(--body);font-size:.88rem;font-style:italic;line-height:1.6;padding-top:24px}
+  .opin cite{display:block;font-family:var(--mono);font-size:9px;color:var(--gold);margin-top:10px;font-style:normal;letter-spacing:.1em}
+  .nl-box{background:var(--paper2);border:1px solid var(--rule);border-radius:var(--r2);padding:18px}
+  .nl-title{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:4px}
+  .nl-desc{font-family:var(--body);font-size:.78rem;font-weight:300;color:var(--muted);margin-bottom:12px;line-height:1.55}
+  .nl-inp{width:100%;background:var(--white);border:1px solid var(--rule2);color:var(--ink);font-family:var(--mono);font-size:12px;padding:8px 11px;border-radius:var(--r);outline:none;margin-bottom:8px}
+  .nl-inp:focus{border-color:var(--gold)}
+  .nl-btn{width:100%;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:9px;border:none;border-radius:var(--r);cursor:pointer;transition:background .18s}
+  .nl-btn:hover{background:var(--ink2)}
+
+  /* ── DATA TABLE ── */
+  .dtbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:var(--r2)}
+  .dtbl{width:100%;border-collapse:collapse;font-size:13px;min-width:620px}
+  .dtbl thead{background:var(--ink)}
+  .dtbl th{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--paper);padding:10px 15px;text-align:left;white-space:nowrap}
+  .dtbl td{padding:11px 15px;border-bottom:1px solid var(--rule);vertical-align:middle}
+  .dtbl tbody tr:last-child td{border-bottom:none}
+  .dtbl tbody tr{background:var(--white);transition:background .15s}
+  .dtbl tbody tr:nth-child(even){background:var(--paper2)}
+  .dtbl tbody tr:hover{background:var(--paper3)}
+  .st{font-family:var(--serif);font-size:.86rem;font-weight:600;color:var(--ink);line-height:1.3}
+  .ss{font-family:var(--mono);font-size:9px;letter-spacing:.05em;color:var(--muted);margin-top:2px}
+  .idx{font-family:var(--serif);font-size:.95rem;font-weight:900;color:var(--rule2)}
+  .tlnk{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.08em;color:var(--gold);text-transform:uppercase;border:1px solid rgba(184,134,11,.4);padding:3px 9px;border-radius:var(--r);white-space:nowrap;transition:background .15s}
+  .tlnk:hover{background:rgba(184,134,11,.1)}
+
+  /* ── PERSPECTIVES ── */
+  .persp-intro{background:var(--white);border:1px solid var(--rule);border-top:4px solid var(--persp);border-radius:0 0 var(--r3) var(--r3);padding:30px 32px;margin:22px 0 28px;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+  .pi-left{border-right:1px solid var(--rule);padding-right:32px}
+  .pi-label{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--persp);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .pi-label::before{content:'';width:20px;height:2px;background:var(--persp)}
+  .persp-intro h2{font-family:var(--serif);font-size:1.4rem;font-weight:900;color:var(--ink);margin-bottom:10px;line-height:1.2}
+  .persp-intro p{font-family:var(--body);font-size:.87rem;font-weight:300;color:var(--ink3);line-height:1.72;margin-bottom:8px}
+  .pi-concept{display:flex;flex-direction:column;gap:12px}
+  .pi-step{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--paper2);border-radius:var(--r2);border-left:3px solid var(--persp)}
+  .pi-step-num{font-family:var(--serif);font-size:1.4rem;font-weight:900;color:var(--persp);line-height:1;flex-shrink:0;padding-top:2px}
+  .pi-step-txt{font-family:var(--body);font-size:.84rem;font-weight:300;color:var(--ink3);line-height:1.6}
+  .pi-step-txt strong{color:var(--ink);font-weight:600}
+  .byline-formula{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;padding:14px 16px;background:var(--paper3);border-radius:var(--r2);border:1px solid var(--rule2)}
+  .bf-part{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;color:var(--ink3);background:var(--white);padding:5px 12px;border:1px solid var(--rule2);border-radius:var(--r)}
+  .bf-part.ai{color:var(--sky);border-color:rgba(29,111,164,.3);background:rgba(29,111,164,.05)}
+  .bf-part.human{color:var(--gold);border-color:rgba(184,134,11,.35);background:rgba(184,134,11,.06)}
+  .bf-part.result{color:var(--persp);border-color:rgba(107,61,138,.3);background:rgba(107,61,138,.06)}
+  .bf-op{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--muted)}
+  .topic-filter{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px}
+  .tf-btn{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:5px 13px;border:1px solid var(--rule2);border-radius:20px;color:var(--muted);cursor:pointer;background:var(--white);transition:all .18s}
+  .tf-btn.active{color:var(--persp);border-color:rgba(107,61,138,.4);background:rgba(107,61,138,.07)}
+  .art-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:var(--r2);overflow:hidden}
+  .art-grid-full{grid-template-columns:1fr}
+  .art-card{background:var(--white);padding:26px;display:flex;flex-direction:column;transition:background .18s;cursor:pointer}
+  .art-card:hover{background:var(--paper2)}
+  .art-card.featured{background:var(--paper2)}
+  .art-label{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--persp);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .art-label::before{content:'';width:18px;height:2px;background:var(--persp)}
+  .art-card h3{font-family:var(--serif);font-size:1.2rem;font-weight:900;line-height:1.22;color:var(--ink);margin-bottom:10px;letter-spacing:-.01em}
+  .art-card.featured h3{font-size:clamp(1.3rem,2.2vw,1.8rem)}
+  .art-excerpt{font-family:var(--body);font-size:.87rem;font-weight:300;color:var(--ink3);line-height:1.72;margin-bottom:18px;flex:1}
+  .byline-block{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--paper2);border:1px solid var(--rule);border-radius:var(--r2);margin-top:auto;border-left:3px solid var(--persp)}
+  .by-ava{width:32px;height:32px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:.8rem;font-weight:700;color:var(--paper);flex-shrink:0;border:1px solid var(--rule)}
+  .by-text{flex:1;min-width:0}
+  .by-written{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.07em;color:var(--muted);text-transform:uppercase;line-height:1.3}
+  .by-written em{font-style:normal;color:var(--sky)}
+  .by-sep{font-family:var(--mono);font-size:8px;color:var(--rule2);margin:2px 0;letter-spacing:.04em}
+  .by-prompted{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.07em;color:var(--muted);text-transform:uppercase;line-height:1.3}
+  .by-prompted em{font-style:normal;color:var(--gold)}
+  .by-date{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.07em;white-space:nowrap;flex-shrink:0}
+  .btn-gold{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--persp);padding:7px 16px;border:1px solid rgba(107,61,138,.4);border-radius:var(--r);transition:background .2s;margin-top:14px;align-self:flex-start}
+  .btn-gold:hover{background:rgba(107,61,138,.08)}
+  .submit-cta{background:var(--ink);color:var(--paper);border-radius:var(--r2);padding:30px 32px;margin-top:32px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .submit-cta h3{font-family:var(--serif);font-size:1.3rem;font-weight:900;color:var(--paper);margin-bottom:6px}
+  .submit-cta h3 span{color:var(--gold)}
+  .submit-cta p{font-family:var(--body);font-size:.84rem;font-weight:300;color:rgba(245,240,232,.65);line-height:1.65;max-width:500px}
+  .sub-btn{flex-shrink:0;background:var(--gold);color:var(--ink);font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:11px 22px;border:none;border-radius:var(--r);cursor:pointer;white-space:nowrap;transition:background .18s}
+  .sub-btn:hover{background:var(--gold2)}
+
+  /* ── FOOTER ── */
+  footer{background:var(--ink);color:var(--paper);padding:48px 0 24px;margin-top:40px;border-top:3px solid var(--gold)}
+  .ftg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:22px}
+  .ft-name{font-family:var(--serif);font-size:1.8rem;font-weight:900;letter-spacing:-.02em;color:var(--paper);margin-bottom:3px}
+  .ft-name span{color:var(--gold)}
+  .ft-sub{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.18em;color:rgba(245,240,232,.4);text-transform:uppercase;margin-bottom:12px}
+  .ft-desc{font-family:var(--body);font-size:.82rem;font-weight:300;color:rgba(245,240,232,.6);line-height:1.65;margin-bottom:14px}
+  .socials{display:flex;gap:7px;flex-wrap:wrap}
+  .sbtn{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border:1px solid rgba(255,255,255,.15);border-radius:var(--r);color:rgba(245,240,232,.6);transition:color .15s,border-color .15s}
+  .sbtn:hover{color:var(--gold);border-color:rgba(184,134,11,.5)}
+  .ftcol h4{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:13px}
+  .ftcol a{display:block;font-family:var(--body);font-size:.82rem;font-weight:300;color:rgba(245,240,232,.6);margin-bottom:8px;transition:color .15s}
+  .ftcol a:hover{color:var(--gold)}
+  .ft-bot{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:rgba(245,240,232,.3);letter-spacing:.06em;flex-wrap:wrap;gap:8px}
+  .ft-bot a{color:var(--gold)}
+
+  /* ── ANIMATIONS ── */
+  .fu{animation:fadeUp .45s ease both}
+  .d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .ornament{text-align:center;color:var(--rule);letter-spacing:.4em;font-size:1rem;margin:6px 0 20px}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:1060px){.hero-grid{grid-template-columns:1fr 300px}.cg{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr 280px}.ftg{grid-template-columns:1fr 1fr;gap:28px}.persp-intro{grid-template-columns:1fr}.pi-left{border-right:none;padding-right:0;border-bottom:1px solid var(--rule);padding-bottom:24px}}
+  @media(max-width:780px){.hero-grid{grid-template-columns:1fr}.hero-main{grid-column:1;grid-row:1;min-height:320px;padding:26px}.hero-side{grid-column:1}.two-col{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:repeat(2,1fr)}.hbtn-g,.hdr-actions{display:none}.art-grid{grid-template-columns:1fr}.mast-inner{grid-template-columns:1fr;text-align:center;gap:8px}.mast-left,.mast-right{display:none}}
+  @media(max-width:560px){.wrap{padding:0 16px}.cg,.cg2{grid-template-columns:1fr}.sidebar{grid-template-columns:1fr}.ftg{grid-template-columns:1fr;gap:22px}.hero-main h1{font-size:1.5rem}.ft-bot{flex-direction:column;align-items:flex-start}.tab-btn{padding:12px 14px;font-size:13px}.submit-cta{flex-direction:column}}
+  </style>
 </head>
-<body class="p-4 md:p-8 text-sm md:text-base">
-    <div class="max-w-6xl mx-auto border-double border-4 border-black p-4 md:p-6 bg-white shadow-2xl">
-        <header class="text-center border-b-2 border-black pb-4 mb-6">
-            <div class="flex justify-between items-end text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4">
-                <div id="live-date">SATURDAY · APRIL 11, 2026</div>
-                <div class="text-lg md:text-xl serif italic">ANN Feed</div>
-                <div>VOL. II · NO. 101</div>
-            </div>
-            <h1 class="text-5xl md:text-8xl serif font-black tracking-tighter uppercase mb-2">ANN News Intelligence</h1>
-            <p class="text-[10px] md:text-sm font-semibold tracking-[0.2em] border-t border-b border-black py-2 inline-block px-8 uppercase">
-                Global Context · Human Prompted · AI Synthesized
-            </p>
-        </header>
+<body>
 
-        <div class="bg-black text-white p-4 flex flex-col md:flex-row justify-between items-center mb-8">
-            <p class="serif italic mb-2 md:mb-0 text-center md:text-left">Join 12,000+ subscribers for the daily intelligence brief.</p>
-            <div class="flex gap-2">
-                <button onclick="window.location.href='https://annfeed.beehiiv.com/subscribe'" class="bg-white text-black px-6 py-2 font-bold text-xs hover:bg-gray-200 uppercase tracking-widest transition-all">Subscribe Free</button>
-            </div>
-        </div>
-
-        <div id="news-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="col-span-3 text-center py-20 italic serif text-gray-400">
-                Syncing with global intelligence nodes...
-            </div>
-        </div>
+<!-- TICKER -->
+<div class="ticker" role="marquee" aria-label="Live headlines">
+  <div class="tick-row wrap">
+    <div class="tick-lbl">LIVE</div>
+    <div class="tick-track" id="ticker-track">
+      <span>Loading latest headlines…</span><span>Loading latest headlines…</span>
     </div>
+  </div>
+</div>
 
-    <script>
-        async function loadNews() {
-            const container = document.getElementById('news-container');
-            try {
-                // Cache-buster forces the browser to fetch the FRESH news.json
-                const response = await fetch('news.json?cache=' + new Date().getTime());
-                const data = await response.json();
-                
-                container.innerHTML = ''; // Clear the "Syncing" message
+<!-- MASTHEAD -->
+<header class="masthead" role="banner">
+  <div class="mast-inner">
+    <div class="mast-left">
+      <div class="date-line" id="today-date"></div>
+      <div>Global News Intelligence</div>
+    </div>
+    <div class="mast-center">
+      <div class="site-name">ANN <span>Feed</span></div>
+      <div class="site-tagline">AI-Curated News &nbsp;·&nbsp; Human-Prompted Perspectives &nbsp;·&nbsp; Est. 2024</div>
+    </div>
+    <div class="mast-right">
+      <div class="edition">annfeed.com</div>
+      <div id="last-updated" style="font-size:9px;letter-spacing:.07em"></div>
+    </div>
+  </div>
+  <div class="hdr-actions">
+    <button class="hbtn hbtn-g">Sign In</button>
+    <button class="hbtn hbtn-s">Subscribe Free</button>
+  </div>
+</header>
 
-                data.articles.forEach((article, index) => {
-                    const articleEl = document.createElement('div');
-                    const isFeature = index === 0;
-                    articleEl.className = isFeature ? "col-span-1 md:col-span-2 border-b md:border-b-0 md:border-r border-black pb-6 md:pb-0 md:pr-8 mb-6" : "mb-6 border-b border-gray-100 pb-4";
-                    
-                    articleEl.innerHTML = `
-                        <div class="mb-2 uppercase text-[10px] font-black tracking-tighter text-red-700">
-                            ${article.category || 'GLOBAL'} / ${article.source}
-                        </div>
-                        <h2 class="${isFeature ? 'text-3xl md:text-5xl' : 'text-lg md:text-xl'} serif font-bold mb-3 hover:underline cursor-pointer leading-tight">
-                            <a href="${article.url}" target="_blank">${article.title}</a>
-                        </h2>
-                        <p class="text-sm leading-relaxed text-gray-700 mb-4 line-clamp-3 italic">
-                            ${article.brief}
-                        </p>
-                        <div class="flex justify-between items-center text-[9px] font-bold pt-2 uppercase text-gray-500">
-                            <span>${article.time || 'PUBLISHED'}</span>
-                            <a href="${article.url}" target="_blank" class="text-black hover:text-red-700 font-black">Full Intel →</a>
-                        </div>
-                    `;
-                    container.appendChild(articleEl);
-                });
-            } catch (error) {
-                container.innerHTML = `<div class="col-span-3 text-center text-red-600 py-10 font-bold tracking-tighter">DATA LINK INTERRUPTED: CHECK BACK SHORTLY</div>`;
-            }
-        }
-        loadNews();
-    </script>
+<!-- PRIMARY NAV -->
+<nav class="pnav" aria-label="Sections">
+  <div class="pnav-row">
+    <a href="#front" class="active">Front Page</a>
+    <span class="pnav-sep">|</span><a href="#tech">Technology</a>
+    <span class="pnav-sep">|</span><a href="#tunisia">Tunisia</a>
+    <span class="pnav-sep">|</span><a href="#world">World</a>
+    <span class="pnav-sep">|</span><a href="#economy">Economy</a>
+    <span class="pnav-sep">|</span><a href="#data">Data Desk</a>
+  </div>
+</nav>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <div class="tab-row wrap">
+    <button class="tab-btn active" data-tab="news">
+      News Feed <span class="tab-badge news-badge">AI AGENT</span>
+    </button>
+    <button class="tab-btn persp-tab" data-tab="perspectives">
+      Perspectives <span class="tab-badge persp-badge">HUMAN + AI</span>
+    </button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     NEWS FEED — 100% dynamic from news.json
+═══════════════════════════════════════ -->
+<div class="panel active" id="tab-news">
+  <div class="page-body">
+    <div class="wrap">
+
+      <div class="intro-box fu">
+        <div class="ib-label">How ANN Feed Works</div>
+        <h2>Your daily briefing, sourced by AI from the world's most trusted newsrooms.</h2>
+        <p>An AI agent scrapes 30+ official RSS feeds from Reuters, BBC, Al Jazeera, TAP Tunisia, Mosaïque FM, La Presse, Financial Afrik, TechCrunch, and more. It generates crisp 2-sentence briefs using Groq AI — no opinion, no filler. Every story links to its original source.</p>
+        <div class="intro-pills">
+          <span class="ipill">📡 30+ RSS Sources</span>
+          <span class="ipill">🤖 Groq AI Briefs</span>
+          <span class="ipill">🇹🇳 Tunisia Coverage</span>
+          <span class="ipill">🔗 Original Sources</span>
+          <span class="ipill">🕐 Auto-Updated</span>
+        </div>
+      </div>
+
+      <div class="ai-status">
+        <div class="ai-pulse"></div>
+        <strong>AI Agent Active</strong>
+        <span>— Reuters · BBC · Al Jazeera · TAP · Mosaïque · La Presse · TechCrunch · FT · CNN · Washington Post</span>
+        <span class="ai-upd" id="status-updated"></span>
+      </div>
+
+      <!-- ALL NEWS CONTENT RENDERED HERE BY JS -->
+      <div id="news-root">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          Fetching intelligence feed…
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PERSPECTIVES PANEL
+═══════════════════════════════════════ -->
+<div class="panel" id="tab-perspectives">
+  <div class="page-body">
+    <div class="wrap">
+      <div class="persp-intro fu">
+        <div class="pi-left">
+          <div class="pi-label">A New Form of Authorship</div>
+          <h2>What is Perspectives?</h2>
+          <p>Perspectives publishes long-form articles that are the product of a <strong>collaboration between a human and an AI writing model</strong>. A human contributor writes a prompt — a few lines describing what they want explored. An AI model then writes the full article from that brief.</p>
+          <p>The result is published with a <strong>dual byline</strong> crediting both: the AI that wrote it, and the human whose curiosity sparked it.</p>
+          <div class="byline-formula">
+            <span class="bf-part ai">AI writes the article</span>
+            <span class="bf-op">+</span>
+            <span class="bf-part human">Human writes the prompt</span>
+            <span class="bf-op">=</span>
+            <span class="bf-part result">A new kind of authorship</span>
+          </div>
+        </div>
+        <div class="pi-concept">
+          <div class="pi-step"><div class="pi-step-num">1</div><div class="pi-step-txt"><strong>A human has an idea.</strong> A question, an argument, a topic worth exploring.</div></div>
+          <div class="pi-step"><div class="pi-step-num">2</div><div class="pi-step-txt"><strong>They write a prompt.</strong> A few sentences describing the angle, tone, and what the article should cover.</div></div>
+          <div class="pi-step"><div class="pi-step-num">3</div><div class="pi-step-txt"><strong>An AI writes the article.</strong> Claude, GPT-4o, Mistral, or another model takes the prompt and produces a complete piece.</div></div>
+          <div class="pi-step"><div class="pi-step-num">4</div><div class="pi-step-txt"><strong>Both are credited.</strong> <em>"Written by Claude (Anthropic), prompted by Ala Nijaoui."</em></div></div>
+        </div>
+      </div>
+
+      <div class="topic-filter fu d1">
+        <button class="tf-btn active">All Topics</button>
+        <button class="tf-btn">Technology</button>
+        <button class="tf-btn">Geopolitics</button>
+        <button class="tf-btn">Economy</button>
+        <button class="tf-btn">Society</button>
+        <button class="tf-btn">Tunisia</button>
+        <button class="tf-btn">Culture</button>
+      </div>
+
+      <!-- FEATURED ARTICLE -->
+      <div class="art-grid art-grid-full fu d1" style="margin-bottom:1px">
+        <article class="art-card featured">
+          <div class="art-label">Featured · Geopolitics</div>
+          <h3>The Sovereignty Paradox: Why Nations Fear the Technology They Need Most</h3>
+          <p class="art-excerpt">In the space of eighteen months, "digital sovereignty" has moved from a niche bureaucratic term to a central axis of foreign policy debate. Yet the countries most vocal about controlling their technological destiny remain deeply dependent on the very infrastructure, platforms, and models they seek to regulate. The answer may lie not in isolation, but in strategic interdependence — choosing which dependencies to accept, and which to resist.</p>
+          <a href="#" class="btn-gold">Read Full Article →</a>
+          <div class="byline-block" style="margin-top:20px">
+            <div class="by-ava">C</div>
+            <div class="by-text">
+              <div class="by-written">Written by <em>Claude (Anthropic)</em></div>
+              <div class="by-sep">· prompted by ·</div>
+              <div class="by-prompted"><em>Ala Nijaoui</em></div>
+            </div>
+            <div class="by-date">Apr 9, 2026</div>
+          </div>
+        </article>
+      </div>
+
+      <div class="art-grid fu d2" style="margin-bottom:1px">
+        <article class="art-card">
+          <div class="art-label">Technology</div>
+          <h3>What Happens When Every Country Has Its Own AI?</h3>
+          <p class="art-excerpt">The proliferation of national AI models raises a question not about capability but about fragmentation. What does a world of incompatible AI ecosystems look like, and who actually benefits from that divergence?</p>
+          <div class="byline-block">
+            <div class="by-ava" style="background:var(--sky)">G</div>
+            <div class="by-text"><div class="by-written">Written by <em>GPT-4o (OpenAI)</em></div><div class="by-sep">· prompted by ·</div><div class="by-prompted"><em>Yasmine Khelifi</em></div></div>
+            <div class="by-date">Apr 7</div>
+          </div>
+        </article>
+        <article class="art-card">
+          <div class="art-label">Economy · Tunisia</div>
+          <h3>Tunisia at the Crossroads: Africa or Europe?</h3>
+          <p class="art-excerpt">For decades, Tunisia's economic gravity pointed north. A new generation of entrepreneurs and investors is asking whether south isn't the more promising direction — and what it would actually take to pivot.</p>
+          <div class="byline-block">
+            <div class="by-ava">C</div>
+            <div class="by-text"><div class="by-written">Written by <em>Claude (Anthropic)</em></div><div class="by-sep">· prompted by ·</div><div class="by-prompted"><em>Ala Nijaoui</em></div></div>
+            <div class="by-date">Apr 5</div>
+          </div>
+        </article>
+        <article class="art-card">
+          <div class="art-label">Society</div>
+          <h3>The Loneliness Algorithm: Social Media Designed to Isolate</h3>
+          <p class="art-excerpt">A growing body of research suggests that engagement-optimised feeds don't connect us — they compare us. This piece examines the architectural choices that turned connection into competition.</p>
+          <div class="byline-block">
+            <div class="by-ava">C</div>
+            <div class="by-text"><div class="by-written">Written by <em>Claude (Anthropic)</em></div><div class="by-sep">· prompted by ·</div><div class="by-prompted"><em>Mehdi Trabelsi</em></div></div>
+            <div class="by-date">Apr 3</div>
+          </div>
+        </article>
+        <article class="art-card">
+          <div class="art-label">Geopolitics</div>
+          <h3>Why the Sahel Is the 21st Century's Most Important Region</h3>
+          <p class="art-excerpt">Mineral wealth, demographic youth, climate vulnerability, and great-power competition — the Sahel has become the arena where the contradictions of the new world order are most legible and most urgent.</p>
+          <div class="byline-block">
+            <div class="by-ava" style="background:var(--sky)">G</div>
+            <div class="by-text"><div class="by-written">Written by <em>GPT-4o (OpenAI)</em></div><div class="by-sep">· prompted by ·</div><div class="by-prompted"><em>Sarra Mansouri</em></div></div>
+            <div class="by-date">Apr 1</div>
+          </div>
+        </article>
+      </div>
+
+      <div class="submit-cta fu d3">
+        <div>
+          <h3>Submit Your <span>Perspective</span></h3>
+          <p>Have a question or angle you want explored? Write us a prompt — a few sentences describing what you'd like the article to cover and the tone you'd want.</p>
+        </div>
+        <button class="sub-btn" onclick="window.location='mailto:perspectives@annfeed.com?subject=Perspective Submission'">Submit a Prompt →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<footer role="contentinfo">
+  <div class="wrap">
+    <div class="ftg">
+      <div>
+        <div class="ft-name">ANN <span>Feed</span></div>
+        <div class="ft-sub">Global News Intelligence · Est. 2024</div>
+        <p class="ft-desc">AI-curated global news and human-prompted perspectives. Sourced from official outlets, written with integrity, published from Tunis — read globally.</p>
+        <div class="socials">
+          <a href="#" class="sbtn">Twitter / X</a>
+          <a href="#" class="sbtn">LinkedIn</a>
+          <a href="#" class="sbtn">RSS</a>
+          <a href="#" class="sbtn">Telegram</a>
+        </div>
+      </div>
+      <div class="ftcol">
+        <h4>News Feed</h4>
+        <a href="#front">Front Page</a><a href="#tech">Technology</a>
+        <a href="#tunisia">Tunisia</a><a href="#world">World</a><a href="#data">Data Desk</a>
+      </div>
+      <div class="ftcol">
+        <h4>Perspectives</h4>
+        <a href="#" data-tab-link="perspectives">All Articles</a>
+        <a href="#" data-tab-link="perspectives">How It Works</a>
+        <a href="mailto:perspectives@annfeed.com">Submit a Prompt</a>
+      </div>
+      <div class="ftcol">
+        <h4>About</h4>
+        <a href="#">AI Methodology</a><a href="#">Editorial Charter</a>
+        <a href="#">Privacy Policy</a><a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="ft-bot">
+      <span>© 2026 ANN Feed. All rights reserved.</span>
+      <span>Hosted on <a href="https://pages.github.com" target="_blank" rel="noopener">GitHub Pages</a> · <a href="https://annfeed.com">annfeed.com</a></span>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════════════ */
+const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const d = new Date();
+const el = document.getElementById('today-date');
+if (el) el.textContent = `${DAYS[d.getDay()].toUpperCase()} · ${MONTHS[d.getMonth()].toUpperCase()} ${d.getDate()}, ${d.getFullYear()}`;
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+
+function catTag(cat){
+  const m = {Technology:'t-sky',Cybersecurity:'t-red',Tunisia:'t-gold',MENA:'t-gold',
+              Economy:'t-gold',Geopolitics:'t-red',Climate:'t-grn',Africa:'t-grn',World:'t-dim'};
+  return m[cat]||'t-dim';
+}
+
+/* ═══════════════════════════════════════════════════════
+   BUILD NEWS UI
+═══════════════════════════════════════════════════════ */
+function buildUI(data){
+  const arts = data.articles||[];
+  if (!arts.length){
+    document.getElementById('news-root').innerHTML =
+      `<div class="error-state">⚠ news.json is empty or missing articles.<br>Run <code>python agent.py --push</code> to generate and publish content.</div>`;
+    return;
+  }
+
+  // Status bar
+  const su = document.getElementById('status-updated');
+  if (su && data.updated) su.textContent = 'Updated ' + data.updated;
+  const lu = document.getElementById('last-updated');
+  if (lu && data.updated) lu.textContent = 'Last update: ' + data.updated;
+
+  // Ticker — fill with all headlines (doubled for infinite scroll)
+  const tt = document.getElementById('ticker-track');
+  if (tt){
+    const items = arts.map(a => `<span>${esc(a.title)}</span>`).join('');
+    tt.innerHTML = items + items; // duplicate for seamless loop
+  }
+
+  // Partition articles by category/region
+  const byCategory = (cat) => arts.filter(a => a.category === cat || a.region === cat);
+  const fallback    = (arr) => arr.length ? arr : arts;
+  const techArts    = fallback(byCategory('Technology'));
+  const tnArts      = fallback(arts.filter(a => a.region==='Tunisia' || a.category==='Tunisia'));
+  const worldArts   = fallback(arts.filter(a => !['Technology','Economy'].includes(a.category) && a.region!=='Tunisia'));
+  const econArts    = fallback(byCategory('Economy'));
+  const hero        = arts[0];
+  const side1       = arts[1];
+  const side2       = arts[2];
+
+  /* ── HERO ─────────────────────────────────── */
+  const heroHTML = `
+    <div class="hero-grid fu d1" id="front">
+      <article class="hero-main">
+        <div class="h-num" aria-hidden="true">01</div>
+        <div class="h-kicker">${esc(hero.source)} · ${esc(hero.category||'News')}</div>
+        <h1>${esc(hero.title)}</h1>
+        <p class="h-deck">${esc(hero.brief)}</p>
+        <div class="h-meta">
+          <span class="tag ${catTag(hero.category)}">${esc(hero.category||'News')}</span>
+          <div class="h-by">Sourced by <strong>ANN AI Agent</strong> · ${esc(hero.date||data.date||'')}</div>
+          <a href="${esc(hero.url||'#')}" class="btn-read" target="_blank" rel="noopener">
+            Read Story
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </article>
+      ${side1 ? `<article class="hero-side">
+        <div>
+          <span class="tag ${catTag(side1.category)}">${esc(side1.category||'News')}</span>
+          <h2>${esc(side1.title)}</h2>
+          <p>${esc(side1.brief)}</p>
+        </div>
+        <div class="sfoot">
+          <time>${esc(side1.time||side1.date||'')}</time>
+          <a href="${esc(side1.url||'#')}" class="arr" target="_blank" rel="noopener">Read →</a>
+        </div>
+      </article>` : ''}
+      ${side2 ? `<article class="hero-side">
+        <div>
+          <span class="tag ${catTag(side2.category)}">${esc(side2.category||'News')}</span>
+          <h2>${esc(side2.title)}</h2>
+          <p>${esc(side2.brief)}</p>
+        </div>
+        <div class="sfoot">
+          <time>${esc(side2.time||side2.date||'')}</time>
+          <a href="${esc(side2.url||'#')}" class="arr" target="_blank" rel="noopener">Read →</a>
+        </div>
+      </article>` : ''}
+    </div>`;
+
+  /* ── BRIEFS LIST ──────────────────────────── */
+  const briefsHTML = `
+    <section class="fs">
+      <div class="shd"><h3>Latest Briefs</h3><div class="rl"></div><div class="ct">Updated ${esc(data.updated||'')}</div></div>
+      <ul class="blist">
+        ${arts.slice(0,8).map((a,i) => `
+          <li class="bi">
+            <div class="bn">${String(i+1).padStart(2,'0')}</div>
+            <div class="bb">
+              <h5><a href="${esc(a.url||'#')}" target="_blank" rel="noopener" style="color:inherit">${esc(a.title)}</a></h5>
+              <p>${esc(a.brief)}</p>
+            </div>
+            <time class="bt">${esc(a.time||a.date||'')}</time>
+          </li>`).join('')}
+      </ul>
+    </section>`;
+
+  /* ── CARD GRID helper ─────────────────────── */
+  function cards(items, cols2=false){
+    return `<div class="cg ${cols2?'cg2':''}">
+      ${items.slice(0,cols2?4:6).map(a=>`
+        <div class="card" onclick="window.open('${esc(a.url||'#')}','_blank')">
+          <div class="cb"><span class="tag ${catTag(a.category)}">${esc(a.category||'News')}</span></div>
+          <h4>${esc(a.title)}</h4>
+          <p>${esc(a.brief)}</p>
+          <div class="cft">
+            <time>${esc(a.time||a.date||'')}</time>
+            <a href="${esc(a.url||'#')}" target="_blank" rel="noopener">Read →</a>
+          </div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  /* ── SECTIONS ──────────────────────────────── */
+  const sectionsHTML = `
+    <div class="ornament">— ✦ —</div>
+    <section class="fs" id="tech">
+      <div class="shd"><h3>Technology</h3><div class="rl"></div><div class="ct">${Math.min(techArts.length,6)} Stories</div></div>
+      ${cards(techArts)}
+    </section>
+    <section class="fs" id="tunisia">
+      <div class="shd"><h3>Tunisia</h3><div class="rl"></div><div class="ct">${Math.min(tnArts.length,4)} Stories</div></div>
+      ${cards(tnArts,true)}
+    </section>
+    <section class="fs" id="world">
+      <div class="shd"><h3>World</h3><div class="rl"></div><div class="ct">${Math.min(worldArts.length,6)} Stories</div></div>
+      ${cards(worldArts)}
+    </section>
+    <section class="fs" id="economy">
+      <div class="shd"><h3>Economy</h3><div class="rl"></div><div class="ct">${Math.min(econArts.length,6)} Stories</div></div>
+      ${cards(econArts)}
+    </section>`;
+
+  /* ── DATA TABLE ───────────────────────────── */
+  const tableHTML = `
+    <section class="fs" id="data">
+      <div class="shd"><h3>Data Desk</h3><div class="rl"></div><div class="ct">Intelligence Feed</div></div>
+      <div class="dtbl-wrap">
+        <table class="dtbl">
+          <thead><tr><th>#</th><th>Story</th><th>Category</th><th>Region</th><th>Date</th><th></th></tr></thead>
+          <tbody>
+            ${arts.slice(0,15).map((a,i)=>`
+              <tr>
+                <td class="idx">${String(i+1).padStart(2,'0')}</td>
+                <td><div class="st">${esc(a.title)}</div><div class="ss">${esc(a.source||'')}</div></td>
+                <td><span class="tag ${catTag(a.category)}">${esc(a.category||'News')}</span></td>
+                <td>${esc(a.region||'Global')}</td>
+                <td>${esc(a.date||'')}</td>
+                <td><a href="${esc(a.url||'#')}" class="tlnk" target="_blank" rel="noopener">Read →</a></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </section>`;
+
+  /* ── SIDEBAR ───────────────────────────────── */
+  const sidebarHTML = `
+    <aside class="sidebar fu d3">
+      <div class="wid">
+        <div class="wid-hd">Trending <span>Now</span></div>
+        <div class="wid-bd" style="padding:8px 16px 12px">
+          ${arts.slice(0,5).map((a,i)=>`
+            <div class="trnd-item" onclick="window.open('${esc(a.url||'#')}','_blank')">
+              <div class="tr">${i+1}</div>
+              <div class="tt">${esc(a.title)}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="wid" style="overflow:visible">
+        <div class="opin">
+          <blockquote>Digital sovereignty is not a luxury — it is the foundation of strategic autonomy in the 21st century information order.</blockquote>
+          <cite>— ANN Editorial Board, 2026</cite>
+        </div>
+      </div>
+      <div class="nl-box">
+        <div class="nl-title">Daily Briefing</div>
+        <p class="nl-desc">Five stories that matter, every morning at 07:00 CET. Free, always.</p>
+        <input class="nl-inp" type="email" placeholder="your@email.com"/>
+        <button class="nl-btn" id="nl-btn">Subscribe Free</button>
+      </div>
+    </aside>`;
+
+  /* ── ASSEMBLE ──────────────────────────────── */
+  document.getElementById('news-root').innerHTML = `
+    ${heroHTML}
+    <div class="two-col fu d2">
+      <div>${briefsHTML}${sectionsHTML}${tableHTML}</div>
+      ${sidebarHTML}
+    </div>`;
+
+  document.getElementById('nl-btn')?.addEventListener('click', function(){
+    this.textContent = "✓ You're in!";
+    this.style.background = 'var(--grn)';
+    setTimeout(()=>{ this.textContent='Subscribe Free'; this.style.background='var(--ink)'; }, 2800);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   FETCH news.json  — cache-busted with timestamp
+   This is the key fix: ?t=Date.now() forces the browser
+   and GitHub Pages CDN to always fetch the latest file.
+═══════════════════════════════════════════════════════ */
+async function loadNews(){
+  const cacheBuster = Date.now();
+  try {
+    const res = await fetch(`news.json?t=${cacheBuster}`, {
+      cache: 'no-store',                        // tells browser: bypass cache entirely
+      headers: { 'Cache-Control': 'no-cache' }  // tells CDN: revalidate
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status} — news.json not found`);
+    const data = await res.json();
+    if (!data?.articles?.length) throw new Error('news.json exists but has no articles');
+    buildUI(data);
+  } catch(err){
+    document.getElementById('news-root').innerHTML = `
+      <div class="error-state">
+        ⚠ <strong>Could not load news.json</strong> (${esc(err.message)})<br><br>
+        Fix: Run <code>python agent.py --push</code> in your terminal, then wait ~60 s for GitHub Pages to update.<br>
+        After that, hard-refresh this page with <strong>Ctrl + Shift + R</strong> (Windows) or <strong>Cmd + Shift + R</strong> (Mac).
+      </div>`;
+    console.error('ANN Feed:', err);
+  }
+}
+loadNews();
+
+/* ═══════════════════════════════════════════════════════
+   TAB SWITCHING
+═══════════════════════════════════════════════════════ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab)?.classList.add('active');
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+});
+document.querySelectorAll('[data-tab-link]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelectorAll('.tab-btn').forEach(b => { if(b.dataset.tab===a.dataset.tabLink) b.click(); });
+  });
+});
+
+/* NAV ACTIVE ON SCROLL */
+const navAs = document.querySelectorAll('.pnav-row a');
+new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting)
+      navAs.forEach(a => a.classList.toggle('active', a.getAttribute('href')==='#'+e.target.id));
+  });
+}, { threshold:0.3, rootMargin:'-80px 0px -40% 0px' })
+.observe(...([document.querySelector('#front')]||[]));
+document.querySelectorAll('[id]').forEach(s => {
+  try { new IntersectionObserver(entries => {
+    entries.forEach(e=>{ if(e.isIntersecting) navAs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id)); });
+  }, {threshold:0.3, rootMargin:'-80px 0px -40% 0px'}).observe(s); } catch(e){}
+});
+
+/* PERSPECTIVES TOPIC FILTER */
+document.querySelectorAll('.tf-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
 </body>
 </html>

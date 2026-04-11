@@ -40,7 +40,7 @@ from pathlib import Path
 # Absolute path to your local repo folder (contains index.html)
 # Windows example:  r"C:\Users\YourName\Desktop\ANN-Global"
 # Mac/Linux example: "/home/yourname/projects/ANN-Global"
-REPO_PATH = os.path.expanduser("REPO_PATH = r"C:\Users\Alaeddine Nijaoui\Desktop\project\ANN-Global")
+REPO_PATH = r"C:\Users\Alaeddine Nijaoui\Desktop\project\ANN-Global"
 
 # Groq free API key — set via env variable (recommended) or paste here
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")

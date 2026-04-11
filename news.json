@@ -1,49 +1,139 @@
-[{
-  "title": "Global Tech Trends in 2026",
-  "brief": "Advancements in AI and blockchain will shape the future of tech.",
-  "category": "Global Tech",
-  "source": "TechCrunch",
-  "url": "https://techcrunch.com/2026-tech-trends/"
-}, {
-  "title": "Tunisia's Economic Growth Projections for 2026",
-  "brief": "Expected GDP growth rate of 4.2% in 2026.",
-  "category": "Tunisia Economy",
-  "source": "World Bank",
-  "url": "https://www.worldbank.org/en/country/tunisia/overview/economic-projections"
-}, {
-  "title": "Tunisian Finance Sector Outlook for 2026",
-  "brief": "Expected increase in foreign investment by 10%.",
-  "category": "Finance",
-  "source": "Central Bank of Tunisia",
-  "url": "https://www.bct.tn/en/News/2026-Outlook"
-}, {
-  "title": "Global Economic Trends in 2026",
-  "brief": "Expected slowdown in global economic growth.",
-  "category": "Global Tech",
-  "source": "IMF",
-  "url": "https://www.imf.org/en/Publications/Article/2026/01/Global-Economic-Trends"
-}, {
-  "title": "Tunisia's Trade Balance in 2026",
-  "brief": "Expected trade deficit of $1.5 billion.",
-  "category": "Tunisia Economy",
-  "source": "Tunisian Ministry of Finance",
-  "url": "https://www.finances.gouv.tn/en/News/Trade-Balance-2026"
-}, {
-  "title": "Cryptocurrency Adoption in Tunisia for 2026",
-  "brief": "Expected increase in cryptocurrency usage by 20%.",
-  "category": "Finance",
-  "source": "CoinDesk",
-  "url": "https://www.coindesk.com/en/2026-coin-adoption-tunisia"
-}, {
-  "title": "Global Cybersecurity Threats in 2026",
-  "brief": "Expected increase in cyber attacks by 15%.",
-  "category": "Global Tech",
-  "source": "Cybersecurity Ventures",
-  "url": "https://www.cybersecurityventures.com/2026-cyber-threats"
-}, {
-  "title": "Tunisia's Renewable Energy Targets for 2026",
-  "brief": "Expected increase in renewable energy production by 30%.",
-  "category": "Tunisia Economy",
-  "source": "Tunisian Ministry of Industry and Small and Medium Enterprises",
-  "url": "https://www.industrie.gouv.tn/en/News/Renewable-Energy-2026"
-}]
+{
+  "updated": "01:09",
+  "date": "Apr 11, 2026",
+  "count": 12,
+  "articles": [
+    {
+      "id": "c50b53e77a",
+      "title": "Lebanon and Israel officials to meet in US on Tuesday",
+      "brief": "Lebanon and Israel officials are scheduled to meet in the US on Tuesday. The meeting is the result of diplomatic efforts, with no further details provided on the agenda or expected outcomes.",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/c93en5q2zl3o?at_medium=RSS&at_campaign=rss",
+      "category": "Geopolitics",
+      "region": "Global",
+      "time": "1h ago",
+      "date": "Apr 11"
+    },
+    {
+      "id": "541570df39",
+      "title": "The five big sticking points in US-Iran talks",
+      "brief": "US and Iranian officials are set to meet in Pakistan on Saturday for peace talks, which will focus on several key issues. The five main sticking points in the talks include Iran's nuclear program, sanctions, terrorism, regional security, and the 2015 nuclear deal.",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/cx2wyn8wdz0o?at_medium=RSS&at_campaign=rss",
+      "category": "World",
+      "region": "Global",
+      "time": "5h ago",
+      "date": "Apr 11"
+    },
+    {
+      "id": "dcbdc99e75",
+      "title": "Palestinian shot dead during Israeli settler attack on occupied West Bank village",
+      "brief": "A Palestinian man was shot dead during an attack by Israeli settlers on a village in the occupied West Bank. The incident occurred amid warnings from former security chiefs that \"government-sponsored Jewish terrorism\" was escalating in the region.",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/czrekrzzex1o?at_medium=RSS&at_campaign=rss",
+      "category": "Geopolitics",
+      "region": "Global",
+      "time": "6h ago",
+      "date": "Apr 11"
+    },
+    {
+      "id": "e9b7695ba9",
+      "title": "Man accused of coercing wife into sex with 120 men goes on trial in Sweden",
+      "brief": "A 61-year-old man in Sweden has gone on trial, accused of coercing his wife into having sex with 120 men. He denies the allegations, claiming he did not use physical violence or drugs to force his wife into these encounters.",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/cx24pdwx588o?at_medium=RSS&at_campaign=rss",
+      "category": "World",
+      "region": "Global",
+      "time": "9h ago",
+      "date": "Apr 11"
+    },
+    {
+      "id": "4bae896ab6",
+      "title": "Chimpanzees in Uganda locked in vicious 'civil war', say researchers",
+      "brief": "Researchers have observed a prolonged conflict among the Ngogo chimpanzees in Uganda, which has been ongoing for approximately eight years. The chimpanzees, once a close-knit community, have been engaged in a violent struggle, described as a \"civil war\" by the researchers.",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/cr71lkzv49po?at_medium=RSS&at_campaign=rss",
+      "category": "Geopolitics",
+      "region": "Global",
+      "time": "7h ago",
+      "date": "Apr 11"
+    },
+    {
+      "id": "5492070ec5",
+      "title": "Dancer with MND performs on stage again through digital avatar",
+      "brief": "Breanna Olson, a dancer with motor neuron disease (MND), has performed on stage using a digital avatar that allows her to control movements through brain signals. The technology, which utilizes brainwave signals, has enabled Olson to re-establish the expression and connection she felt had been lost due to her condition.",
+      "source": "BBC Tech",
+      "url": "https://www.bbc.com/news/articles/cgqkz5lzvnwo?at_medium=RSS&at_campaign=rss",
+      "category": "Technology",
+      "region": "Global",
+      "time": "10h ago",
+      "date": "Apr 11"
+    },
+    {
+      "id": "83904e5cae",
+      "title": "Meta pulls Facebook ads recruiting for social media addiction lawsuits",
+      "brief": "I couldn't find any information about a recent landmark social media addiction trial in California that Meta lost. However, I can provide a general response based on the given information.\n\nMeta has removed Facebook ads recruiting for social media addiction lawsuits.",
+      "source": "BBC Tech",
+      "url": "https://www.bbc.com/news/articles/czjw0zgz9zyo?at_medium=RSS&at_campaign=rss",
+      "category": "Technology",
+      "region": "Global",
+      "time": "8h ago",
+      "date": "Apr 11"
+    },
+    {
+      "id": "d0f5e5ad6f",
+      "title": "White House staff told not to place bets on prediction markets",
+      "brief": "The White House has instructed staff to refrain from participating in prediction markets, citing concerns over potential conflicts of interest and the integrity of government operations. This directive is in response to the growing popularity of prediction markets, where users can place bets on various outcomes, including international conflicts.",
+      "source": "BBC Tech",
+      "url": "https://www.bbc.com/news/articles/cgld65x396go?at_medium=RSS&at_campaign=rss",
+      "category": "Technology",
+      "region": "Global",
+      "time": "21h ago",
+      "date": "Apr 11"
+    },
+    {
+      "id": "eaa7e8f08e",
+      "title": "Mayor warns of London 'disinformation blizzard'",
+      "brief": "London Mayor Sir Sadiq Khan has warned of a \"disinformation blizzard\" targeting the city, claiming it is being portrayed as being in decline. According to Khan, London is being subjected to disinformation campaigns that aim to misrepresent the city's reality.",
+      "source": "BBC Tech",
+      "url": "https://www.bbc.com/news/articles/cp3l4kwer5ko?at_medium=RSS&at_campaign=rss",
+      "category": "Technology",
+      "region": "Global",
+      "time": "8h ago",
+      "date": "Apr 11"
+    },
+    {
+      "id": "113ca5e845",
+      "title": "Amazon to end support for older Kindles, prompting user outcry",
+      "brief": "Amazon will discontinue support for older Kindles released before 2013, affecting users' ability to download new e-books. This change means owners of these devices will no longer be able to access new e-book content from Amazon.",
+      "source": "BBC Tech",
+      "url": "https://www.bbc.com/news/articles/c98k91yy4z4o?at_medium=RSS&at_campaign=rss",
+      "category": "Technology",
+      "region": "Global",
+      "time": "Yesterday",
+      "date": "Apr 11"
+    },
+    {
+      "id": "1e14ae6d66",
+      "title": "Israeli strike on government building kills Lebanese officers",
+      "brief": "An Israeli air strike on a government building in Nabatieh, southern Lebanon, resulted in the deaths of at least 13 people, including Lebanese officers. The incident occurred during a period of heightened tensions between Israel and Lebanon.",
+      "source": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/4/10/israeli-strike-on-government-building-kills-lebanese-officers?traffic_source=rss",
+      "category": "Technology",
+      "region": "MENA",
+      "time": "13m ago",
+      "date": "Apr 11"
+    },
+    {
+      "id": "45dca65522",
+      "title": "Brazil announces US partnership to intercept weapons, drug trafficking",
+      "brief": "Brazil's government has announced a partnership with the US to intercept weapons and drug trafficking. The partnership aims to combat illicit arms imports, with Brazil seizing 1,168 US-imported firearms in the last 12 months.",
+      "source": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/4/10/brazil-announces-us-partnership-to-intercept-weapons-drug-trafficking?traffic_source=rss",
+      "category": "Technology",
+      "region": "MENA",
+      "time": "29m ago",
+      "date": "Apr 11"
+    }
+  ]
+}
